@@ -226,7 +226,6 @@ function usual(&$out) {
   $total=count($modemlist);
   for($i=0;$i<$total;$i++) {
    $modem=$modemlist[$i];
-   $pname='test';
    $prec=SQLSelect("SELECT * FROM modems_params WHERE DEVICE_ID=".$modem['ID']);
 //	DebMes($modem);
    if ($modem['TYPE'] == 'huawei') {
