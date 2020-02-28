@@ -1,0 +1,93 @@
+[#if TOTALCOUNT#]
+Всего входящих смс: <#TOTALCOUNT#>.
+[#endif TOTALCOUNT#]
+Внимание, удаление происходит непосредственно с модема!
+<!-- Table 'modems' edit -->
+<!-- paging -->
+[#if PAGES#]
+<div class="row">
+ <div class="col-md-6">
+  <ul class="pagination">
+   [#begin PREVPAGE#]<li><a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=sms&page=[#NUM#]">&laquo;</a></li>[#end PREVPAGE#]
+   [#begin PAGES#]
+   <li [#if SELECTED#]class="active"[#endif#]><a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=sms&page=[#NUM#]">[#NUM#]</a></li>
+   [#end PAGES#]
+   [#begin NEXTPAGE#]<li><a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=sms&page=[#NUM#]">&raquo;</a></li>[#end NEXTPAGE#]
+  </ul>
+ </div>
+</div>
+[#endif PAGES#]
+<!-- / paging -->
+	
+<form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
+[#if OK#]
+<div class="alert alert-success"><#LANG_DATA_SAVED#>11</div>
+[#endif OK#]
+[#if ERR#]
+<div class="alert alert-danger"><#LANG_FILLOUT_REQURED#></div>
+[#endif ERR#]
+<fieldset>
+[#if ID=""#]
+<legend><#LANG_NEW_RECORD#></legend>
+[#endif ID#]
+
+<div class="form-group">
+<div>
+<table class="table table-stripped">
+ <tr>
+  <td>Прочитано</td>
+  <td>Телефон</td>
+  <td>Текст</td>
+  <td>Дата</td>
+  <td>&nbsp;</td>
+ </tr>
+ [#begin PROPERTIES#]
+ <tr>
+  <td valign="top"><img src="/img/system/[#Smstat#]" width="34" height="34"></td>
+  <td valign="top">[#Phone#]</td>
+  <td valign="top">[#Content#]</td>
+  <td valign="top">[#Date#]</td>
+  <td><a href="?id=<#ID#>&tab=<#TAB#>&view_mode=<#VIEW_MODE#>&delete_id=[#Index#]" onClick="return confirm('<#LANG_ARE_YOU_SURE#>');" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></td>
+ </tr>
+ [#end PROPERTIES#]
+</table> 
+</div>
+</div>
+<div class="form-group">
+        <div class="col-lg-offset-3 col-lg-4">
+ [#if ID!=""#]
+ <button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_SUBMIT#></button>
+ [#else ID#]
+ <button type="submit" name="subm" value="Add" class="btn btn-primary"><#LANG_ADD#></button>
+ [#endif ID#]
+ <a href="?data_source=<#DATA_SOURCE#>" class="btn btn-default "><#LANG_CANCEL#></a>
+<input type="hidden" name="id" value="<#ID#>">
+<input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
+<input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
+<input type="hidden" name="mode" value="update">
+<input type="hidden" name="data_source" value="<#DATA_SOURCE#>">
+<input type="hidden" name="tab" value="<#TAB#>">
+        </div>
+</div>
+</fieldset>
+</form>
+<!-- paging -->
+[#if PAGES#]
+<div class="row">
+ <div class="col-md-6">
+  <ul class="pagination">
+   [#begin PREVPAGE#]<li><a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=sms&page=[#NUM#]">&laquo;</a></li>[#end PREVPAGE#]
+   [#begin PAGES#]
+   <li [#if SELECTED#]class="active"[#endif#]><a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=sms&page=[#NUM#]">[#NUM#]</a></li>
+   [#end PAGES#]
+   [#begin NEXTPAGE#]<li><a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=sms&page=[#NUM#]">&raquo;</a></li>[#end NEXTPAGE#]
+  </ul>
+ </div>
+</div>
+[#endif PAGES#]
+<!-- / paging -->
+
+
+<!-- dataset2 (module) -->
+<div class="form-group">
+</div>
