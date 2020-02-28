@@ -105,7 +105,7 @@
   }
 
   if ($this->tab=='data') {
-//$this->checkModem();
+
    //dataset2
    $new_id=0;
    global $delete_id;
@@ -114,6 +114,7 @@
    }
    $properties=SQLSelect("SELECT * FROM modems_params WHERE DEVICE_ID='".$rec['ID']."' ORDER BY TITLE");
    $total=count($properties);
+   if (!$total)    $this->checkModem();
    for($i=0;$i<$total;$i++) {
     if ($properties[$i]['ID']==$new_id) continue;
     if ($this->mode=='update') {
