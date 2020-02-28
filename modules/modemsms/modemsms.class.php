@@ -320,6 +320,15 @@ modems_params -
  modems_params: LINKED_PROPERTY varchar(100) NOT NULL DEFAULT ''
  modems_params: LINKED_METHOD varchar(100) NOT NULL DEFAULT ''
  modems_params: UPDATED datetime
+ 
+ modems_sms: ID int(10) unsigned NOT NULL auto_increment
+ modems_sms: SMSTAT int(10) unsigned NOT NULL
+ modems_sms: INDEX int(10) unsigned NOT NULL
+ modems_sms: PHONE varchar(255) NOT NULL DEFAULT ''
+ modems_sms: DEVICE_ID int(10) NOT NULL DEFAULT '0'
+ modems_sms: CONTENT LONGTEXT NOT NULL DEFAULT ''
+ modems_sms: DATE datetime
+
 EOD;
   parent::dbInstall($data);
  }
