@@ -308,8 +308,8 @@ modems_params -
  modems: TITLE varchar(100) NOT NULL DEFAULT ''
  modems: TYPE varchar(255) NOT NULL DEFAULT ''
  modems: IP varchar(255) NOT NULL DEFAULT ''
- modems: CHECK_LATEST datetime NOT NULL DEFAULT ''
- modems: CHECK_NEXT datetime NOT NULL DEFAULT ''
+ modems: CHECK_LATEST datetime DEFAULT NULL
+ modems: CHECK_NEXT datetime DEFAULT NULL
  modems: INTERVAL int(10) unsigned DEFAULT NULL
 
  modems_params: ID int(10) unsigned NOT NULL auto_increment
