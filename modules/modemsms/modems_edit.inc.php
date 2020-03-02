@@ -106,15 +106,18 @@
 	$i=0;
 	foreach ($all_sms as $sms) {
 //		DebMes($sms['tag']);
-		$properties[$i]['Smstat']=str_replace(array(0,1,2),array('message.png','accept.png','accept.png'),$sms['tag']);
+		$properties[$i]['Smstat']=str_replace(array(0,1,2),array('accept.png','message.png','warning.png'),$sms['tag']);
 		$properties[$i]['Index']=$sms['id'];
 		$properties[$i]['Phone']=$sms['number'];
 		$properties[$i]['Content']=$sms['content'];
 		preg_match_all('/\d+/',$sms['date'],$m);
 		$m=$m[0];
 //		$norm_date=$m[2].'.'.$m[1].'.'.$m[0].' '.$m[3].':'.$m[4].':'.$m[5];
-		$norm_date='20'.$m[0].'-'.$m[1].'-'.$m[2].' '.$m[3].':'.$m[4].':'.$m[5];
+		$unixtime=mktime($m[3],$m[4],$m[5],$m[1],$m[2],$m[0]);
+//		$norm_date='20'.$m[0].'-'.$m[1].'-'.$m[2].' '.$m[3].':'.$m[4].':'.$m[5];
+		$norm_date=date('Y-m-d H:i:s',$unixtime);
 		$properties[$i]['Date']=$norm_date;
+//		$properties[$i]['Date']=$sms['date'];
 		$i++;
 	}
    }
