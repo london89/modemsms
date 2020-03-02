@@ -98,6 +98,25 @@
  //DebMes('123333');
  //	DebMes(print_r($sms->Index,true));
  //	DebMes($key);
+   } else if ($rec['TYPE'] == 'zte') {
+	include_once '3rdparty/Zte.php';
+	$zte = new ZTE_WEB;
+	$zte->setAddress($rec['IP']);
+	$all_sms = $zte->get_sms();
+	$i=0;
+	foreach ($all_sms as $sms) {
+//		DebMes($sms['tag']);
+		$properties[$i]['Smstat']=str_replace(array(0,1,2),array('message.png','accept.png','accept.png'),$sms['tag']);
+		$properties[$i]['Index']=$sms['id'];
+		$properties[$i]['Phone']=$sms['number'];
+		$properties[$i]['Content']=$sms['content'];
+		preg_match_all('/\d+/',$sms['date'],$m);
+		$m=$m[0];
+//		$norm_date=$m[2].'.'.$m[1].'.'.$m[0].' '.$m[3].':'.$m[4].':'.$m[5];
+		$norm_date='20'.$m[0].'-'.$m[1].'-'.$m[2].' '.$m[3].':'.$m[4].':'.$m[5];
+		$properties[$i]['Date']=$norm_date;
+		$i++;
+	}
    }
    $out['PROPERTIES']=$properties;
    $out['PAGES']=$pages;
