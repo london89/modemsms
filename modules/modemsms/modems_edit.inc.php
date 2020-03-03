@@ -2,6 +2,7 @@
 /*
 * @version 0.1 (wizard)
 */
+//DebMes($this->data_source);
   if ($this->owner->name=='panel') {
    $out['CONTROLPANEL']=1;
   }
@@ -23,8 +24,8 @@
    $rec['TYPE']=gr('type');
   }
   // step: data
-  if ($this->tab=='data') {
-  }
+//  if ($this->tab=='data') {
+//  }
   //UPDATING RECORD
    if ($ok) {
     if ($rec['ID']) {
@@ -48,8 +49,8 @@
 	}
   }
   // step: data
-  if ($this->tab=='data') {
-  }
+//  if ($this->tab=='data') {
+//  }
   if ($this->tab=='sms') {
    if ($rec['TYPE'] == 'huawei') {
     include_once '3rdparty/Router.php';
@@ -102,22 +103,36 @@
 	include_once '3rdparty/Zte.php';
 	$zte = new ZTE_WEB;
 	$zte->setAddress($rec['IP']);
-	$all_sms = $zte->get_sms();
+	$page=1;
+        if (isset($_GET['page']) && is_numeric($_GET['page'])) $page=$_GET['page'];
+        $totalCount=SQLSelectOne("SELECT sum(VALUE) as VALUE FROM modems_params WHERE DEVICE_ID='".$rec['ID']."' AND (TITLE='sms_nv_rev_total' OR TITLE='sms_nv_send_total')");
+
+//DebMes($totalCount);
+
+       if (isset($totalCount['VALUE']) && is_numeric($totalCount['VALUE'])) {
+        $out['TOTALCOUNT']=$totalCount['VALUE'];
+        $all_sms = $zte->get_sms($page);
+        $pagesCount=(int)($totalCount['VALUE']/20);
+        for ($i=0;$i<=$pagesCount;$i++) {
+           $pages[$i]['NUM'] = $i+1;
+           if ($i+1 == $page) $pages[$i]['SELECTED']='1';
+        }
+       } else {
+        $all_sms = $zte->get_sms();
+
+       }
+
 	$i=0;
 	foreach ($all_sms as $sms) {
-//		DebMes($sms['tag']);
 		$properties[$i]['Smstat']=str_replace(array(0,1,2),array('accept.png','message.png','warning.png'),$sms['tag']);
 		$properties[$i]['Index']=$sms['id'];
 		$properties[$i]['Phone']=$sms['number'];
 		$properties[$i]['Content']=$sms['content'];
 		preg_match_all('/\d+/',$sms['date'],$m);
 		$m=$m[0];
-//		$norm_date=$m[2].'.'.$m[1].'.'.$m[0].' '.$m[3].':'.$m[4].':'.$m[5];
 		$unixtime=mktime($m[3],$m[4],$m[5],$m[1],$m[2],$m[0]);
-//		$norm_date='20'.$m[0].'-'.$m[1].'-'.$m[2].' '.$m[3].':'.$m[4].':'.$m[5];
 		$norm_date=date('Y-m-d H:i:s',$unixtime);
 		$properties[$i]['Date']=$norm_date;
-//		$properties[$i]['Date']=$sms['date'];
 		$i++;
 	}
    }
@@ -125,18 +140,23 @@
    $out['PAGES']=$pages;
 
   }
-
+  if ($this->command=='refresh') {
+//	DebMes('Refresh');
+	$this->checkModem();
+  }
   if ($this->tab=='data') {
-
+//DebMes('data');
    //dataset2
    $new_id=0;
    global $delete_id;
    if ($delete_id) {
     SQLExec("DELETE FROM modems_params WHERE ID='".(int)$delete_id."'");
    }
+
    $properties=SQLSelect("SELECT * FROM modems_params WHERE DEVICE_ID='".$rec['ID']."' ORDER BY TITLE");
    $total=count($properties);
    if (!$total)    $this->checkModem();
+
    for($i=0;$i<$total;$i++) {
     if ($properties[$i]['ID']==$new_id) continue;
     if ($this->mode=='update') {
@@ -163,9 +183,12 @@
        addLinkedProperty($properties[$i]['LINKED_OBJECT'], $properties[$i]['LINKED_PROPERTY'], $this->name);
       }
      }
-   }
+
+    }
+
    $out['PROPERTIES']=$properties;
   }
+
   if (is_array($rec)) {
    foreach($rec as $k=>$v) {
     if (!is_array($v)) {
@@ -173,5 +196,6 @@
     }
    }
   }
+
 
   outHash($rec, $out);

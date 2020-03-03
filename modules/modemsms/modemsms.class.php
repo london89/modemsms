@@ -46,6 +46,9 @@ function saveParams($data=1) {
  if (IsSet($this->tab)) {
   $p["tab"]=$this->tab;
  }
+ if (IsSet($this->command)) {
+  $p["command"]=$this->command;
+ }
  return parent::saveParams($p);
 }
 /**
@@ -62,6 +65,7 @@ function getParams() {
   global $edit_mode;
   global $data_source;
   global $tab;
+  global $command;
   if (isset($id)) {
    $this->id=$id;
   }
@@ -79,6 +83,9 @@ function getParams() {
   }
   if (isset($tab)) {
    $this->tab=$tab;
+  }
+  if (isset($command)) {
+   $this->command=$command;
   }
 //$this->checkModem();
 }
@@ -109,6 +116,7 @@ function run() {
   $out['ACTION']=$this->action;
   $out['DATA_SOURCE']=$this->data_source;
   $out['TAB']=$this->tab;
+  $out['COMMAND']=$this->command;
   $this->data=$out;
   $p=new parser(DIR_TEMPLATES.$this->name."/".$this->name.".html", $this->data, $this);
   $this->result=$p->result;
@@ -253,7 +261,7 @@ function usual(&$out) {
 				$new=0;
 			}
 		}
-		if ($new && $value) {
+		if ($new && ($value != '')) {
 			// не было у нас еще такого параметра, добавляем
                         $rec_par['DEVICE_ID'] = $modem['ID'];
                         $rec_par['TITLE'] = $key;
@@ -263,6 +271,40 @@ function usual(&$out) {
                         SQLInsert('modems_params', $rec_par);
 		}
 	}
+
+
+   } else if ($modem['TYPE'] == 'zte') {
+//	DebMes('zte');
+	include_once('3rdparty/Zte.php');
+        $zte = new ZTE_WEB;
+        $zte->setAddress($modem['IP']);
+        $params = $zte->get_params();
+        $smsparams = $zte->get_sms_params();
+	$modemTotal=(object)array_merge((array)$smsparams,(array)$params);
+        foreach ($modemTotal as $key => $value) {
+                $new=1;
+                foreach ($prec as $line => $param) {
+                        if ($key == $param['TITLE']) {
+                                //такой параметр найден. проверяем, изменилось ли значение.
+                                if ($value != $param['VALUE']) {
+                                        $param['VALUE'] = $value;
+                                        $param['UPDATED'] = date('Y-m-d H:i:s');
+                                        SQLUpdate('modems_params', $param);
+//                                      DebMes('update '.$key);
+                                }
+                                $new=0;
+                        }
+                }
+                if ($new && ($value != '')) {
+                        // не было у нас еще такого параметра, добавляем
+                        $rec_par['DEVICE_ID'] = $modem['ID'];
+                        $rec_par['TITLE'] = $key;
+//                        $rec_par['NOTE'] = 'Описание';
+                        $rec_par['VALUE'] = $value;
+                        $rec_par['UPDATED'] = date('Y-m-d H:i:s');
+                        SQLInsert('modems_params', $rec_par);
+                }
+        }
 
 
    }
