@@ -280,7 +280,8 @@ function usual(&$out) {
         $zte->setAddress($modem['IP']);
         $params = $zte->get_params();
         $smsparams = $zte->get_sms_params();
-	$modemTotal=(object)array_merge((array)$smsparams,(array)$params);
+	$netparams = $zte->get_net_params();
+	$modemTotal=(object)array_merge((array)$smsparams,(array)$params,(array)$netparams);
         foreach ($modemTotal as $key => $value) {
                 $new=1;
                 foreach ($prec as $line => $param) {

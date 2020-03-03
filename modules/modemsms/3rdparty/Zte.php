@@ -83,15 +83,25 @@ class ZTE_WEB
         public function get_sms($page=1)
         {
 		$page--;
-                $cont=$this->url('http://'.$this->ip.'/goform/goform_get_cmd_process?cmd=sms_data_total&page=$page&data_per_page=20&mem_store=1&tags=10&order_by=order+by+id+desc');
+//                $cont=$this->url('http://'.$this->ip.'/goform/goform_get_cmd_process?cmd=sms_data_total&page=$page&data_per_page=10&mem_store=1&tags=10&order_by=order+by+id+desc');
+                $cont=$this->url('http://'.$this->ip.'/goform/goform_get_cmd_process?cmd=sms_data_total&page=$page&data_per_page=500&mem_store=1&tags=10&order_by=order+by+id+desc');
                 $cont = json_decode($cont,true);
                 $cont = $cont['messages'];
+//DebMes(count($cont).' '.$page);
                 foreach ($cont as $id => $arr) $cont[$id]['content']=$this->hex2utf(($cont[$id]['content']));
                 return $cont;
         }
         public function get_params()
         {
                 $cont=$this->url('http://'.$this->ip.'/goform/goform_get_cmd_process?multi_data=1&isTest=false&sms_received_flag_flag=0&sts_received_flag_flag=0&cmd=modem_main_state%2Cpin_status%2Cloginfo%2Cnew_version_state%2Ccurrent_upgrade_state%2Cis_mandatory%2Csms_received_flag%2Csts_received_flag%2Csignalbar%2Cnetwork_type%2Cnetwork_provider%2Cppp_status%2CEX_SSID1%2Cex_wifi_status%2CEX_wifi_profile%2Cm_ssid_enable%2Csms_unread_num%2CRadioOff%2Csimcard_roam%2Clan_ipaddr%2Cstation_mac%2Cbattery_charging%2Cbattery_vol_percent%2Cbattery_pers%2Cspn_display_flag%2Cplmn_display_flag%2Cspn_name_data%2Cspn_b1_flag%2Cspn_b2_flag%2Crealtime_tx_bytes%2Crealtime_rx_bytes%2Crealtime_time%2Crealtime_tx_thrpt%2Crealtime_rx_thrpt%2Cmonthly_rx_bytes%2Cmonthly_tx_bytes%2Cmonthly_time%2Cdate_month%2Cdata_volume_limit_switch%2Cdata_volume_limit_size%2Cdata_volume_alert_percent%2Cdata_volume_limit_unit%2Croam_setting_option%2Cupg_roam_switch');
+                $cont = json_decode($cont,true);
+//                $cont = $cont['messages'];
+  //              foreach ($cont as $id => $arr) $cont[$id]['content']=$this->hex2utf(($cont[$id]['content']));
+                return $cont;
+        }
+        public function get_net_params()
+        {
+                $cont=$this->url('http://'.$this->ip.'/goform/goform_get_cmd_process?isTest=false&cmd=wifi_coverage%2Cm_ssid_enable%2Cimei%2Cweb_version%2Cwa_inner_version%2Chardware_version%2CMAX_Access_num%2CSSID1%2Cm_SSID%2Cm_HideSSID%2Cm_MAX_Access_num%2Clan_ipaddr%2Cwan_active_band%2Cmac_address%2Cmsisdn%2CLocalDomain%2Cwan_ipaddr%2Cipv6_wan_ipaddr%2Cipv6_pdp_type%2Cpdp_type%2Cppp_status%2Csim_iccid%2Csim_imsi%2Crmcc%2Crmnc%2Crssi%2Crscp%2Clte_rsrp%2Cecio%2Clte_snr%2Cnetwork_type%2Clte_rssi%2Clac_code%2Ccell_id%2Clte_pci%2Cdns_mode%2Cprefer_dns_manual%2Cstandby_dns_manual%2Cprefer_dns_auto%2Cstandby_dns_auto%2Cipv6_dns_mode%2Cipv6_prefer_dns_manual%2Cipv6_standby_dns_manual%2Cipv6_prefer_dns_auto%2Cipv6_standby_dns_auto%2Cmodel_name&multi_data=1');
                 $cont = json_decode($cont,true);
 //                $cont = $cont['messages'];
   //              foreach ($cont as $id => $arr) $cont[$id]['content']=$this->hex2utf(($cont[$id]['content']));

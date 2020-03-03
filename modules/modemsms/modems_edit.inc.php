@@ -103,12 +103,12 @@
 	include_once '3rdparty/Zte.php';
 	$zte = new ZTE_WEB;
 	$zte->setAddress($rec['IP']);
-	$page=1;
+/*	$page=1;
         if (isset($_GET['page']) && is_numeric($_GET['page'])) $page=$_GET['page'];
         $totalCount=SQLSelectOne("SELECT sum(VALUE) as VALUE FROM modems_params WHERE DEVICE_ID='".$rec['ID']."' AND (TITLE='sms_nv_rev_total' OR TITLE='sms_nv_send_total')");
-
+*/
 //DebMes($totalCount);
-
+/*
        if (isset($totalCount['VALUE']) && is_numeric($totalCount['VALUE'])) {
         $out['TOTALCOUNT']=$totalCount['VALUE'];
         $all_sms = $zte->get_sms($page);
@@ -121,7 +121,8 @@
         $all_sms = $zte->get_sms();
 
        }
-
+*/
+	$all_sms = $zte->get_sms();
 	$i=0;
 	foreach ($all_sms as $sms) {
 		$properties[$i]['Smstat']=str_replace(array(0,1,2),array('accept.png','message.png','warning.png'),$sms['tag']);
