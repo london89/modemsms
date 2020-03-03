@@ -63,42 +63,27 @@
     if (isset($_GET['page']) && is_numeric($_GET['page'])) $page=$_GET['page'];
     $totalCount=SQLSelectOne("SELECT VALUE FROM modems_params WHERE DEVICE_ID='".$rec['ID']."' AND TITLE='LocalInbox'");
 
- //DebMes($totalCount);
     if (isset($totalCount['VALUE']) && is_numeric($totalCount['VALUE'])) {
      $out['TOTALCOUNT']=$totalCount['VALUE'];
      $smss = $router->getInbox($page);
      $pagesCount=(int)($totalCount['VALUE']/20);
- //DebMes($pagesCount);
 
      for ($i=0;$i<=$pagesCount;$i++) {
  	$pages[$i]['NUM'] = $i+1;
  	if ($i+1 == $page) $pages[$i]['SELECTED']='1';
      }
- /*    $pages[0]['NUM']='1';
-     $pages[1]['NUM']='2';
-     $pages[1]['SELECTED']='1';
-     $pages[2]['NUM']='3';
- */
     } else {
      $smss = $router->getInbox($page,500);
 
     }
- //DebMes($smss);
- //   for ($smss->Messages->Message as $key => $sms) {
     $total=$smss->Count;
- //DebMes($total);
     for ($i=0;$i<$total;$i++) {
-       //global ${'title'.$properties[$i]['ID']};
        $properties[$i]['Smstat']=str_replace(array(0,1),array('message.png','accept.png'),$smss->Messages->Message[$i]->Smstat);
        $properties[$i]['Index']=$smss->Messages->Message[$i]->Index;
        $properties[$i]['Phone']=$smss->Messages->Message[$i]->Phone;
        $properties[$i]['Content']=$smss->Messages->Message[$i]->Content;
        $properties[$i]['Date']=$smss->Messages->Message[$i]->Date;
- //	DebMes($smss->Messages->Message[$i]->Smstat);
     }
- //DebMes('123333');
- //	DebMes(print_r($sms->Index,true));
- //	DebMes($key);
    } else if ($rec['TYPE'] == 'zte') {
 	include_once '3rdparty/Zte.php';
 	$zte = new ZTE_WEB;
@@ -161,7 +146,7 @@
    $properties=SQLSelect("SELECT * FROM modems_params WHERE DEVICE_ID='".$rec['ID']."' ORDER BY TITLE");
    $total=count($properties);
    if (!$total)    $this->checkModem();
-
+DebMes($this->mode);
    for($i=0;$i<$total;$i++) {
     if ($properties[$i]['ID']==$new_id) continue;
     if ($this->mode=='update') {
@@ -200,6 +185,7 @@
      $rec[$k]=htmlspecialchars($v);
     }
    }
+//  $this->redirect('?');
   }
 
 

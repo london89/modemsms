@@ -148,6 +148,7 @@ function admin(&$out) {
  if (isset($this->data_source) && !$_GET['data_source'] && !$_POST['data_source']) {
   $out['SET_DATASOURCE']=1;
  }
+/*
  if ($this->data_source=='modems_params') {
   if ($this->view_mode=='' || $this->view_mode=='search_modems_params') {
    $this->search_modems_params($out);
@@ -156,6 +157,7 @@ function admin(&$out) {
    $this->edit_modems_params($out, $this->id);
   }
  }
+*/
 }
 /**
 * FrontEnd
@@ -356,6 +358,7 @@ modems_params -
 
  modems_params: ID int(10) unsigned NOT NULL auto_increment
  modems_params: TITLE varchar(100) NOT NULL DEFAULT ''
+ modems_params: NOTE varchar(255) NOT NULL DEFAULT ''
  modems_params: VALUE varchar(255) NOT NULL DEFAULT ''
  modems_params: DEVICE_ID int(10) NOT NULL DEFAULT '0'
  modems_params: LINKED_OBJECT varchar(100) NOT NULL DEFAULT ''
