@@ -126,6 +126,14 @@ class ZTE_WEB
                 $post='isTest=false&goformId=DELETE_SMS&msg_id='.urlencode($list_id).'&Callback=true';
                 return $this->url($url,$post);
         }
+        public function delete_sms($id)
+        {
+		if (!isset($id) || !is_numeric($id)) return false;
+                $url = 'http://'.$this->ip.'/goform/goform_set_cmd_process';
+                $post='isTest=false&goformId=DELETE_SMS&msg_id='.$id.';&Callback=true';
+                return $this->url($url,$post);
+        }
+
         public function mark_as_read($id)
         {
                 $url = 'http://'.$this->ip.'/goform/goform_set_cmd_process';
