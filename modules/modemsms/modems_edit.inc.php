@@ -135,18 +135,21 @@
 	$this->checkModem();
   }
   if ($this->tab=='data') {
+
+//DebMes('data');
 //DebMes('data');
    //dataset2
+  
    $new_id=0;
    global $delete_id;
    if ($delete_id) {
     SQLExec("DELETE FROM modems_params WHERE ID='".(int)$delete_id."'");
    }
-
+/*
    $properties=SQLSelect("SELECT * FROM modems_params WHERE DEVICE_ID='".$rec['ID']."' ORDER BY TITLE");
    $total=count($properties);
    if (!$total)    $this->checkModem();
-DebMes($this->mode);
+//DebMes($this->mode);
    for($i=0;$i<$total;$i++) {
     if ($properties[$i]['ID']==$new_id) continue;
     if ($this->mode=='update') {
@@ -175,8 +178,8 @@ DebMes($this->mode);
      }
 
     }
-
-   $out['PROPERTIES']=$properties;
+*/
+//   $out['PROPERTIES']=$properties;
   }
 
   if (is_array($rec)) {

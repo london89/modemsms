@@ -122,6 +122,50 @@ function run() {
   $this->result=$p->result;
 //DebMes($out);
 }
+function getModemParams (&$out, $id,$page) {
+   $count=SQLSelectOne("SELECT count(*) as count FROM modems_params WHERE DEVICE_ID='".$id."'");
+   $count=$count['count'];
+   $pagesCount=(int)($count/10);
+   for ($i=0;$i<=$pagesCount;$i++) {
+     $pages[$i]['NUM'] = $i+1;
+     if ($i+1 == $page) $pages[$i]['SELECTED']='1';
+   }
+
+   $properties=SQLSelect("SELECT * FROM modems_params WHERE DEVICE_ID='".$id."' ORDER BY TITLE LIMIT ".(($page-1)*10).",10");
+   $total=count($properties);
+   if (!$total)    $this->checkModem();
+//DebMes($this->mode);
+   for($i=0;$i<$total;$i++) {
+    if ($properties[$i]['ID']==$new_id) continue;
+    if ($this->mode=='update') {
+      global ${'title'.$properties[$i]['ID']};
+      $properties[$i]['TITLE']=trim(${'title'.$properties[$i]['ID']});
+      global ${'note'.$properties[$i]['ID']};
+      $properties[$i]['NOTE']=trim(${'note'.$properties[$i]['ID']});
+      global ${'value'.$properties[$i]['ID']};
+      $properties[$i]['VALUE']=trim(${'value'.$properties[$i]['ID']});
+      global ${'linked_object'.$properties[$i]['ID']};
+      $properties[$i]['LINKED_OBJECT']=trim(${'linked_object'.$properties[$i]['ID']});
+      global ${'linked_property'.$properties[$i]['ID']};
+      $properties[$i]['LINKED_PROPERTY']=trim(${'linked_property'.$properties[$i]['ID']});
+      global ${'linked_method'.$properties[$i]['ID']};
+      $properties[$i]['LINKED_METHOD']=trim(${'linked_method'.$properties[$i]['ID']});
+//DebMes($properties[$i]);
+      SQLUpdate('modems_params', $properties[$i]);
+      $old_linked_object=$properties[$i]['LINKED_OBJECT'];
+      $old_linked_property=$properties[$i]['LINKED_PROPERTY'];
+      if ($old_linked_object && $old_linked_object!=$properties[$i]['LINKED_OBJECT'] && $old_linked_property && $old_linked_property!=$properties[$i]['LINKED_PROPERTY']) {
+       removeLinkedProperty($old_linked_object, $old_linked_property, $this->name);
+      }
+      if ($properties[$i]['LINKED_OBJECT'] && $properties[$i]['LINKED_PROPERTY']) {
+       addLinkedProperty($properties[$i]['LINKED_OBJECT'], $properties[$i]['LINKED_PROPERTY'], $this->name);
+      }
+     }
+
+    }
+    $out['PROPERTIES'] = $properties;
+    $out['PAGES'] = $pages;
+}
 /**
 * BackEnd
 *
@@ -138,6 +182,11 @@ function admin(&$out) {
    $this->search_modems($out);
   }
   if ($this->view_mode=='edit_modems') {
+   if ($this->tab == 'data') {
+	$page=1;
+	if (isset($_GET['page']) && is_numeric($_GET['page'])) $page=$_GET['page'];
+	$this->getModemParams($out, $this->id,$page);
+   }
    $this->edit_modems($out, $this->id);
   }
   if ($this->view_mode=='delete_modems') {

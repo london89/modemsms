@@ -1,5 +1,19 @@
 <!-- Table 'modems' edit -->
-
+<!-- paging -->
+[#if PAGES#]
+<div class="row">
+ <div class="col-md-6">
+  <ul class="pagination">
+   [#begin PREVPAGE#]<li><a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=data&page=[#NUM#]">&laquo;</a></li>[#end PREVPAGE#]
+   [#begin PAGES#]
+   <li [#if SELECTED#]class="active"[#endif#]><a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=data&page=[#NUM#]">[#NUM#]</a></li>
+   [#end PAGES#]
+   [#begin NEXTPAGE#]<li><a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=data&page=[#NUM#]">&raquo;</a></li>[#end NEXTPAGE#]
+  </ul>
+ </div>
+</div>
+[#endif PAGES#]
+<!-- / paging -->
 <form action="" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
 <a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=<#TAB#>&command=refresh" class="btn btn-default "><#LANG_UPDATE#></a>
 [#if OK#]
@@ -43,6 +57,23 @@
 </table> 
 </div>
 </div>
+<!-- paging -->
+[#if PAGES#]
+<div class="row">
+ <div class="col-md-6">
+  <ul class="pagination">
+   [#begin PREVPAGE#]<li><a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=data&page=[#NUM#]">&laquo;</a></li>[#end PREVPAGE#]
+   [#begin PAGES#]
+   <li [#if SELECTED#]class="active"[#endif#]><a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=data&page=[#NUM#]">[#NUM#]</a></li>
+   [#end PAGES#]
+   [#begin NEXTPAGE#]<li><a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=data&page=[#NUM#]">&raquo;</a></li>[#end NEXTPAGE#]
+  </ul>
+ </div>
+</div>
+[#endif PAGES#]
+<!-- / paging -->
+
+
 <div class="form-group">
         <div class="col-lg-offset-3 col-lg-4">
  [#if ID!=""#]
