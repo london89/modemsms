@@ -126,9 +126,14 @@ function getModemParams (&$out, $id,$page) {
    $count=SQLSelectOne("SELECT count(*) as count FROM modems_params WHERE DEVICE_ID='".$id."'");
    $count=$count['count'];
    $pagesCount=(int)($count/10);
+   $prevpage=$nextpage=array();
    for ($i=0;$i<=$pagesCount;$i++) {
      $pages[$i]['NUM'] = $i+1;
-     if ($i+1 == $page) $pages[$i]['SELECTED']='1';
+     if ($i+1 == $page) {
+	if ($i>0) $prevpage['NUM']=$i;
+	if ($i<$pagesCount) $nextpage['NUM']=$i+2;
+	$pages[$i]['SELECTED']=$i;
+     }
    }
 
    $properties=SQLSelect("SELECT * FROM modems_params WHERE DEVICE_ID='".$id."' ORDER BY TITLE LIMIT ".(($page-1)*10).",10");
@@ -165,6 +170,8 @@ function getModemParams (&$out, $id,$page) {
     }
     $out['PROPERTIES'] = $properties;
     $out['PAGES'] = $pages;
+    $out['PREVPAGE'] = $prevpage;
+    $out['NEXTPAGE'] = $nextpage;
 }
 /**
 * BackEnd

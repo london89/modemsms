@@ -67,10 +67,14 @@
      $out['TOTALCOUNT']=$totalCount['VALUE'];
      $smss = $router->getInbox($page);
      $pagesCount=(int)($totalCount['VALUE']/20);
-
+     $prevpage=$nextpage=array();
      for ($i=0;$i<=$pagesCount;$i++) {
  	$pages[$i]['NUM'] = $i+1;
- 	if ($i+1 == $page) $pages[$i]['SELECTED']='1';
+ 	if ($i+1 == $page) {
+         if ($i>0) $prevpage['NUM']=$i;
+         if ($i<$pagesCount) $nextpage['NUM']=$i+2;
+	 $pages[$i]['SELECTED']='1';
+	}
      }
     } else {
      $smss = $router->getInbox($page,500);
@@ -128,6 +132,8 @@
    }
    $out['PROPERTIES']=$properties;
    $out['PAGES']=$pages;
+   $out['PREVPAGE']=$prevpage;
+   $out['NEXTPAGE']=$nextpage;
 
   }
   if ($this->command=='refresh') {
