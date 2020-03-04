@@ -139,6 +139,14 @@
   if ($this->command=='refresh') {
 //	DebMes('Refresh');
 	$this->checkModem();
+        $this->redirect('?tab=data&view_mode=edit_modems&id='.$rec['ID']);
+
+  }
+  if ($this->command=='fullrefresh') {
+//	DebMes('Refresh');
+	$this->checkModem(1);
+        $this->redirect('?tab=data&view_mode=edit_modems&id='.$rec['ID']);
+
   }
   if ($this->tab=='data') {
 
@@ -150,6 +158,7 @@
    global $delete_id;
    if ($delete_id) {
     SQLExec("DELETE FROM modems_params WHERE ID='".(int)$delete_id."'");
+    $this->redirect('?tab=data&view_mode=edit_modems&id='.$rec['ID']);
    }
 /*
    $properties=SQLSelect("SELECT * FROM modems_params WHERE DEVICE_ID='".$rec['ID']."' ORDER BY TITLE");

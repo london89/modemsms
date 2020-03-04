@@ -138,7 +138,7 @@ function getModemParams (&$out, $id,$page) {
 
    $properties=SQLSelect("SELECT * FROM modems_params WHERE DEVICE_ID='".$id."' ORDER BY TITLE LIMIT ".(($page-1)*10).",10");
    $total=count($properties);
-   if (!$total)    $this->checkModem();
+   if (!$total)    $this->checkModem(1);
 //DebMes($this->mode);
    for($i=0;$i<$total;$i++) {
     if ($properties[$i]['ID']==$new_id) continue;
@@ -286,7 +286,7 @@ function usual(&$out) {
 //        $router->setAddress($modem['URL']);
 
  }
- function checkModem() {
+ function checkModem($full=0) {
 //  $modemlist=SQLSelect("SELECT * FROM modemsms_devices WHERE CHECK_NEXT<=NOW()");
   $modemlist=SQLSelect("SELECT * FROM modems");
   $total=count($modemlist);
@@ -319,7 +319,7 @@ function usual(&$out) {
 				$new=0;
 			}
 		}
-		if ($new && ($value != '')) {
+		if ($new && $full) {
 			// не было у нас еще такого параметра, добавляем
                         $rec_par['DEVICE_ID'] = $modem['ID'];
                         $rec_par['TITLE'] = $key;
@@ -354,7 +354,7 @@ function usual(&$out) {
                                 $new=0;
                         }
                 }
-                if ($new && ($value != '')) {
+                if ($new && $full) {
                         // не было у нас еще такого параметра, добавляем
                         $rec_par['DEVICE_ID'] = $modem['ID'];
                         $rec_par['TITLE'] = $key;
