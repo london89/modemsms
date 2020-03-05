@@ -7,7 +7,7 @@
  [#endif VIEW_MODE#]
  <!-- / table modems search -->
  <!-- table modems edit -->
- [#if VIEW_MODE="edit_modems"#]
+ [#if VIEW_MODE="edit_modems" || VIEW_MODE="sms_send"#]
    [#if ID!=""#]
    [#if TITLE!=""#]<h4>[#TITLE#]</h4>[#endif TITLE#]
 <ul class="nav nav-tabs">
@@ -20,6 +20,9 @@
   <li[#if TAB="sms"#] class="active"[#endif#]>
    <a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=sms">SMS</a>
   </li>
+  <li[#if TAB="smssend"#] class="active"[#endif#]>
+   <a href="?data_source=<#DATA_SOURCE#>&view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=smssend">Отправка SMS</a>
+  </li>
 </ul>
 &nbsp;<br/>
    [#endif ID#]
@@ -31,6 +34,9 @@
    [#endif TAB#]
    [#if TAB="sms"#]
     [#inc modems_edit_sms.html#]
+   [#endif TAB#]
+   [#if TAB="smssend"#]
+    [#inc modems_send_sms.html#]
    [#endif TAB#]
  [#endif VIEW_MODE#]
  <!-- / table modems edit -->

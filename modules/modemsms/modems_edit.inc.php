@@ -28,6 +28,7 @@
 //  }
   //UPDATING RECORD
    if ($ok) {
+	DebMes(123);
     if ($rec['ID']) {
      SQLUpdate($table_name, $rec); // update
     } else {

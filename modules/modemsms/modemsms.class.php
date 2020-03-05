@@ -173,6 +173,45 @@ function getModemParams (&$out, $id,$page) {
     $out['PREVPAGE'] = $prevpage;
     $out['NEXTPAGE'] = $nextpage;
 }
+
+function sendSMS($id,$phone,$text) {
+
+   $table_name='modems';
+   $rec=SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id'");
+
+   if ($rec['TYPE'] == 'huawei') {
+    include_once '3rdparty/Router.php';
+    $router = new Router;
+    $router->setAddress($rec['IP']);
+//    $send = 1;
+// 1 - если все ок
+    $send = $router->sendSms($phone,$text);
+    if ($send == 1) {
+	return 1;
+    } else {
+	DebMes($send);
+	return 0;
+    }
+
+   } else if ($rec['TYPE'] == 'zte') {
+    include_once '3rdparty/Zte.php';
+    $zte = new ZTE_WEB;
+    $zte->setAddress($rec['IP']);
+//    $send = '{"result":"success"}';
+//{"result":"success"} если всё ок
+    $send = $zte->send($phone,$text);
+    $send = json_decode($send);
+    if ($send->result == 'success') {
+	return 1;
+    } else {
+	DebMes($send);
+	return 0;
+    }
+   }
+
+
+}
+
 /**
 * BackEnd
 *
@@ -189,6 +228,10 @@ function admin(&$out) {
    $this->search_modems($out);
   }
   if ($this->view_mode=='edit_modems') {
+   if ($this->tab == 'smssend') {
+ 	$this->sms_send($out, $this->id);
+   }
+
    if ($this->tab == 'data') {
 	$page=1;
 	if (isset($_GET['page']) && is_numeric($_GET['page'])) $page=$_GET['page'];
@@ -196,6 +239,7 @@ function admin(&$out) {
    }
    $this->edit_modems($out, $this->id);
   }
+
   if ($this->view_mode=='delete_modems') {
    $this->delete_modems($this->id);
    $this->redirect("?data_source=modems");
@@ -240,6 +284,9 @@ function usual(&$out) {
 */
  function edit_modems(&$out, $id) {
   require(DIR_MODULES.$this->name.'/modems_edit.inc.php');
+ }
+ function sms_send(&$out, $id) {
+  require(DIR_MODULES.$this->name.'/modems_sms_send.inc.php');
  }
 /**
 * modems delete record
