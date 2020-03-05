@@ -12,7 +12,7 @@
    if (isset($rec['TITLE'])) {
 //   $send = $this->sendSMS($title,$phone,$text);
      $send=1;
-     DebMes($rec['TITLE'].$phone.$text);
+//     DebMes($rec['TITLE'].$phone.$text);
      if ($send) {
       $out['OK'] = 1;
      } else {

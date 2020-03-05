@@ -324,6 +324,8 @@ function usual(&$out) {
    }
  }
  function processCycle() {
+//	DebMes('cycle from processCycle');
+	$this->checkModem();
   //to-do
  }
  function getSms() {
@@ -357,12 +359,19 @@ function usual(&$out) {
 			if ($key == $param['TITLE']) {
 				//такой параметр найден. проверяем, изменилось ли значение.
 				if ($value != $param['VALUE']) {
+					if ($param['LINKED_OBJECT'] && $param['LINKED_PROPERTY']) {
+						setGlobal($param['LINKED_OBJECT'].'.'.$param['LINKED_PROPERTY'], $param['VALUE'], array($this->name=>'0'));
+					} else if ($param['LINKED_OBJECT'] && $param['LINKED_METHOD']) {
+						callMethod($param['LINKED_OBJECT'] . '.' . $param['LINKED_METHOD'], array('VALUE'=>$param['VALUE']));
+					}
+
         	                        $param['VALUE'] = $value;
 					$param['UPDATED'] = date('Y-m-d H:i:s');
 	                                SQLUpdate('modems_params', $param);
 //					DebMes('update '.$key);
 				}
 				$new=0;
+//DebMes($param['TITLE']);
 			}
 		}
 		if ($new && $full) {
