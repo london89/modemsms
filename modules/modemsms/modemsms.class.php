@@ -174,11 +174,10 @@ function getModemParams (&$out, $id,$page) {
     $out['NEXTPAGE'] = $nextpage;
 }
 
-function sendSMS($id,$phone,$text) {
-
+function sendSMS($title,$phone,$text) {
+//DebMes($title.$phone.$text);
    $table_name='modems';
-   $rec=SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id'");
-
+   $rec=SQLSelectOne("SELECT * FROM $table_name WHERE TITLE='".DbSafe($title)."'");
    if ($rec['TYPE'] == 'huawei') {
     include_once '3rdparty/Router.php';
     $router = new Router;

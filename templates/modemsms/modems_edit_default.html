@@ -4,7 +4,7 @@
 <div class="alert alert-success"><#LANG_DATA_SAVED#></div>
 [#endif OK#]
 [#if ERR#]
-<div class="alert alert-danger"><#LANG_FILLOUT_REQURED#></div>
+<div class="alert alert-danger"><#LANG_FILLOUT_REQURED#>[#if ERR_TITLE#] <#ERR_TITLE#>[#endif ERR_TITLE#]</div>
 [#endif ERR#]
 <fieldset>
 [#if ID=""#]

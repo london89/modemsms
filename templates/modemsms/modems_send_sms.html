@@ -16,6 +16,7 @@
  <button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_SEND#></button>
  <a href="?data_source=<#DATA_SOURCE#>" class="btn btn-default "><#LANG_CANCEL#></a>
 <input type="hidden" name="id" value="<#ID#>">
+<input type="hidden" name="title" value="<#TITLE#>">
 <input type="hidden" name="view_mode" value="<#VIEW_MODE#>">
 <input type="hidden" name="edit_mode" value="<#EDIT_MODE#>">
 <input type="hidden" name="mode" value="sendsms">
@@ -26,4 +27,13 @@
 </fieldset>
 </form>
 
+<div>
+<pre>
+Отправка из методов и скриптов с этого модема:
+
+include_once(DIR_MODULES . 'modemsms/modemsms.class.php');
+$sms = new modemsms();
+$sms->sendSMS("<#TITLE#>", "phone", "test message");
+</pre>
+</div>
 

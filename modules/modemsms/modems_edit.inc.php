@@ -14,6 +14,7 @@
   if ($this->tab=='') {
   //updating '<%LANG_TITLE%>' (varchar, required)
    $rec['TITLE']=gr('title');
+   $fromsqltitle=SQLSelectOne("SELECT * FROM $table_name WHERE TITLE ='".DbSafe($rec['TITLE'])."'");
    if ($rec['TITLE']=='') {
     $out['ERR_TITLE']=1;
     $ok=0;
@@ -28,14 +29,19 @@
 //  }
   //UPDATING RECORD
    if ($ok) {
-	DebMes(123);
     if ($rec['ID']) {
      SQLUpdate($table_name, $rec); // update
+     $out['OK']=1;
     } else {
-     $new_rec=1;
-     $rec['ID']=SQLInsert($table_name, $rec); // adding new record
+     if (!$fromsqltitle['TITLE']) {
+      $new_rec=1;
+      $rec['ID']=SQLInsert($table_name, $rec); // adding new record
+      $out['OK']=1;
+     } else {
+      $out['ERR']=1;
+      $out['ERR_TITLE']='Модем с таким именем уже существует.';
+     }
     }
-    $out['OK']=1;
    } else {
     $out['ERR']=1;
    }
