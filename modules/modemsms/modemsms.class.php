@@ -136,7 +136,7 @@ function getModemParams (&$out, $id,$page) {
      }
    }
 
-   $properties=SQLSelect("SELECT * FROM modems_params WHERE DEVICE_ID='".$id."' ORDER BY TITLE LIMIT ".(($page-1)*10).",10");
+   $properties=SQLSelect("SELECT * FROM modems_params WHERE DEVICE_ID='".$id."' ORDER BY UPDATED DESC LIMIT ".(($page-1)*10).",10");
    $total=count($properties);
    if (!$total)    $this->checkModem(1);
 //DebMes($this->mode);

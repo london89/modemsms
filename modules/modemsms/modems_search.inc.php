@@ -16,7 +16,7 @@
    $session->data['modems_qry']=$qry;
   }
   if (!$qry) $qry="1";
-  $sortby_modems="ID DESC";
+  $sortby_modems="ID";
   $out['SORTBY']=$sortby_modems;
   // SEARCH RESULTS
   $res=SQLSelect("SELECT * FROM modems WHERE $qry ORDER BY ".$sortby_modems);
