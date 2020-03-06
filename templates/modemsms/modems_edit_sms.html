@@ -1,3 +1,12 @@
+<style>
+   tbody tr:hover {
+    background: #eee; /* Цвет фона при наведении */
+   }
+   input[type='checkbox'] {
+	width: 25px;
+	height: 25px;
+   }
+</style>
 [#if TOTALCOUNT#]
 Всего входящих смс: <#TOTALCOUNT#>.
 [#endif TOTALCOUNT#]
@@ -18,7 +27,7 @@
 </div>
 [#endif PAGES#]
 <!-- / paging -->
-	
+
 <form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
 [#if OK#]
 <div class="alert alert-success"><#LANG_DATA_SAVED#>11</div>
@@ -39,15 +48,15 @@
   <td>Телефон</td>
   <td>Текст</td>
   <td>Дата</td>
-  <td>&nbsp;</td>
+  <td>Удалить?</td>
  </tr>
  [#begin PROPERTIES#]
  <tr>
   <td valign="top"><img src="/img/system/[#Smstat#]" width="34" height="34"></td>
   <td valign="top">[#Phone#]</td>
-  <td valign="top">[#Content#]</td>
+  <td valign="top" width="80%">[#Content#]</td>
   <td valign="top">[#Date#]</td>
-  <td><a href="?id=<#ID#>&tab=<#TAB#>&view_mode=<#VIEW_MODE#>&delete_id=[#Index#]" onClick="return confirm('<#LANG_ARE_YOU_SURE#>');" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></td>
+  <td><input type="checkbox" name="delete_ids[]" value=[#Index#]></td>
  </tr>
  [#end PROPERTIES#]
 </table> 

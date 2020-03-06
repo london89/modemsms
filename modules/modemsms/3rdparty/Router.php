@@ -265,11 +265,12 @@ class Router
 	{
 		//Makes sure we are ready for the next request.
 		$this->prepare(); 
-
-		$deleteXml = '<?xml version="1.0" encoding="UTF-8"?><request>
-			<Index>'.$index.'</Index>
-			</request>
-		';
+		if (!is_array($index)) return 'err not array';
+		$deleteXml = '<?xml version="1.0" encoding="UTF-8"?><request>';
+		foreach ($index as $key => $value) {
+			$deleteXml.="<Index>$value</Index>";
+		}
+		$deleteXml.='</request>';
 		$xml = $this->http->postXml($this->getUrl('api/sms/delete-sms'), $deleteXml);
 		$obj = new \SimpleXMLElement($xml);
 		//Simple check if login is OK.

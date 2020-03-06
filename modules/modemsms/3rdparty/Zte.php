@@ -128,7 +128,7 @@ class ZTE_WEB
         }
         public function delete_sms($id)
         {
-		if (!isset($id) || !is_numeric($id)) return false;
+		if (!isset($id)) return false;
                 $url = 'http://'.$this->ip.'/goform/goform_set_cmd_process';
                 $post='isTest=false&goformId=DELETE_SMS&msg_id='.$id.';&Callback=true';
                 return $this->url($url,$post);

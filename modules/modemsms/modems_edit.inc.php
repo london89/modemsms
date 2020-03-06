@@ -23,6 +23,13 @@
    $rec['IP']=gr('ip');
   //updating 'type' (varchar)
    $rec['TYPE']=gr('type');
+
+  } else if ($this->tab=='sms') {
+//	DebMes('smsupdate');
+	$delete_ids=gr('delete_ids');
+//	DebMes($_POST);
+//	DebMes($delete_ids);
+
   }
   // step: data
 //  if ($this->tab=='data') {
@@ -63,9 +70,10 @@
     include_once '3rdparty/Router.php';
     $router = new Router;
     $router->setAddress($rec['IP']);
-    if (isset($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
- 	$router->deleteSms($_GET['delete_id']);
+    if (isset($delete_ids) && is_array($delete_ids)) {
+       $router->deleteSms($delete_ids);
     }
+
     $page=1;
     if (isset($_GET['page']) && is_numeric($_GET['page'])) $page=$_GET['page'];
     $totalCount=SQLSelectOne("SELECT VALUE FROM modems_params WHERE DEVICE_ID='".$rec['ID']."' AND TITLE='LocalInbox'");
@@ -99,8 +107,11 @@
 	include_once '3rdparty/Zte.php';
 	$zte = new ZTE_WEB;
 	$zte->setAddress($rec['IP']);
-        if (isset($_GET['delete_id']) && is_numeric($_GET['delete_id'])) {
-          $zte->delete_sms($_GET['delete_id']);
+        if (isset($delete_ids) && is_array($delete_ids)) {
+	    $ids_list=implode(";",$delete_ids);
+//		DebMes($ids_list);
+            $zte->delete_sms($ids_list);
+//		DebMes($delete_ids);
         }
 
 /*	$page=1;
