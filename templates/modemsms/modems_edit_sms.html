@@ -1,3 +1,28 @@
+<script  type="text/javascript">
+$(function () {
+   $.fn.selall = function() {
+        if  (!$(this).is(":checked")){
+             $(".checkbox").prop('checked', false);
+             $(".checkbox").parent().parent().css({backgroundColor: 'transparent'});
+        }
+        else{
+             $(".checkbox").prop('checked', true);
+             $(".checkbox").parent().parent().css({backgroundColor: '#ff6666'});
+       }
+
+   };
+
+   $.fn.click = function() {
+       if (!$(this).is(":checked")) {
+        $(this).parent().parent().css({backgroundColor: 'transparent'});
+       }
+       else {
+        $(this).parent().parent().css({backgroundColor: '#ff6666'});
+       }
+   };
+});
+</script>
+
 <style>
    tbody tr:hover {
     background: #eee; /* Цвет фона при наведении */
@@ -48,7 +73,7 @@
   <td>Телефон</td>
   <td>Текст</td>
   <td>Дата</td>
-  <td><input type="checkbox" onClick="checkboxes = document.getElementsByName('delete_ids[]');for(var i=0, n=checkboxes.length;i<n;i++) {checkboxes[i].checked = this.checked;}"></td>
+  <td><input type="checkbox" class="checkbox" onClick="$(this).selall()" title="Пометить все на удаление"></td>
  </tr>
  [#begin PROPERTIES#]
  <tr>
@@ -56,7 +81,7 @@
   <td valign="top">[#Phone#]</td>
   <td valign="top" width="80%">[#Content#]</td>
   <td valign="top">[#Date#]</td>
-  <td valign="top"><input type="checkbox" name="delete_ids[]" value=[#Index#]></td>
+  <td valign="top"><input type="checkbox" name="delete_ids[]" class="checkbox" value=[#Index#] title="Удалить" onClick="$(this).click()"></td>
  </tr>
  [#end PROPERTIES#]
 </table> 

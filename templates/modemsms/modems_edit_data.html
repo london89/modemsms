@@ -1,7 +1,38 @@
+<script  type="text/javascript">
+$(function () {
+   $.fn.selall = function() {
+        if  (!$(this).is(":checked")){
+             $(".checkbox").prop('checked', false);
+             $(".checkbox").parent().parent().css({backgroundColor: 'transparent'});
+        }
+        else{
+             $(".checkbox").prop('checked', true);
+             $(".checkbox").parent().parent().css({backgroundColor: '#ff6666'});
+       }
+
+   };
+
+   $.fn.click = function() {
+       if (!$(this).is(":checked")) {
+        $(this).parent().parent().css({backgroundColor: 'transparent'});
+       }
+       else {
+        $(this).parent().parent().css({backgroundColor: '#ff6666'});
+       }
+   };
+});
+</script>
+
+
 <style>
    tbody tr:hover {
     background: #eee; /* Цвет фона при наведении */
    }
+   input[type='checkbox'] {
+        width: 25px;
+        height: 25px;
+   }
+
 </style>
 
 <!-- Table 'modems' edit -->
@@ -46,7 +77,8 @@
   <td><#LANG_LINKED_PROPERTY#></td>
   <td><#LANG_METHOD#></td>
   <td valign="top"><#LANG_UPDATED#></td>
-  <td>&nbsp;</td>
+  <!--td><input type="checkbox" onClick="checkboxes = document.getElementsByName('delete_ids[]');for(var i=0, n=checkboxes.length;i<n;i++) {checkboxes[i].checked = this.checked;}" title="Пометить все на удаление"></td-->
+  <td><input type="checkbox" title="Пометить все на удаление" class="checkbox" id="selall" onClick="$(this).selall()"></td>
  </tr>
  [#begin PROPERTIES#]
  <tr>
@@ -58,7 +90,7 @@
   <td valign="top"><input type="text" name="linked_method[#ID#]" id="linked_method[#ID#]" value="[#LINKED_METHOD#]"></td>
   [#module name="linkedobject" object_field="linked_object<#PROPERTIES.ID#>" property_field="linked_property<#PROPERTIES.ID#>" method_field="linked_method<#PROPERTIES.ID#>" width="200"#]
   <td valign="top">[#UPDATED#]</td>
-  <td><a href="?id=<#ID#>&tab=<#TAB#>&view_mode=<#VIEW_MODE#>&delete_id=[#ID#]" onClick="return confirm('<#LANG_ARE_YOU_SURE#>');" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i></td>
+  <td valign="top"><input type="checkbox" name="delete_id[]" class="checkbox" value=[#ID#] title="Удалить" onClick="$(this).click()"></td>
  </tr>
  [#end PROPERTIES#]
 </table> 

@@ -25,11 +25,9 @@
    $rec['TYPE']=gr('type');
 
   } else if ($this->tab=='sms') {
-//	DebMes('smsupdate');
 	$delete_ids=gr('delete_ids');
-//	DebMes($_POST);
-//	DebMes($delete_ids);
-
+  } else if ($this->tab=='data') {
+	$delete_ids=gr('delete_ids');
   }
   // step: data
 //  if ($this->tab=='data') {
@@ -171,13 +169,22 @@
 //DebMes('data');
 //DebMes('data');
    //dataset2
-  
    $new_id=0;
-   global $delete_id;
+/*   global $delete_id;
    if ($delete_id) {
     SQLExec("DELETE FROM modems_params WHERE ID='".(int)$delete_id."'");
     $this->redirect('?tab=data&view_mode=edit_modems&id='.$rec['ID']);
    }
+*/
+    if (isset($delete_ids) && is_array($delete_ids)) {
+	$ids_list=implode(",",$delete_ids);
+	SQLExec("DELETE FROM modems_params WHERE ID IN (".DbSafe($ids_list).")");
+        $page=1;
+        if (isset($_GET['page']) && is_numeric($_GET['page'])) $page=$_GET['page'];
+        $this->redirect('?tab=data&view_mode=edit_modems&id='.$rec['ID'].'&page='.$page);
+
+//	DebMes($ids_list);
+    }
 /*
    $properties=SQLSelect("SELECT * FROM modems_params WHERE DEVICE_ID='".$rec['ID']."' ORDER BY TITLE");
    $total=count($properties);
