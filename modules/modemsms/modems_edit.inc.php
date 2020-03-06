@@ -158,6 +158,25 @@
         $this->redirect('?tab=data&view_mode=edit_modems&id='.$rec['ID']);
 
   }
+  if ($this->command=='markasread') {
+   if ($rec['TYPE'] == 'huawei') {
+    include_once '3rdparty/Router.php';
+    $router = new Router;
+    $router->setAddress($rec['IP']);
+    $router->mark_as_read(array($_GET['msg_id']));
+
+   } else if ($rec['TYPE'] == 'zte') {
+    include_once '3rdparty/Zte.php';
+    $zte = new ZTE_WEB;
+    $zte->setAddress($rec['IP']);
+    $zte->mark_as_read($_GET['msg_id']);
+
+
+   }
+//	DebMes('markasread');
+        $this->redirect('?tab=sms&view_mode=edit_modems&id='.$rec['ID'].'&page='.$page);
+
+  }
   if ($this->command=='fullrefresh') {
 //	DebMes('Refresh');
 	$this->checkModem(1);

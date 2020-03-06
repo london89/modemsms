@@ -280,6 +280,21 @@ class Router
 		//Simple check if login is OK.
 		return ((string)$obj == 'OK');
 	}
+	public function mark_as_read($index)
+	{
+		//Makes sure we are ready for the next request.
+		$this->prepare(); 
+		if (!is_array($index)) return 'err not array';
+		$deleteXml = '<?xml version="1.0" encoding="UTF-8"?><request>';
+		foreach ($index as $key => $value) {
+			$deleteXml.="<Index>$value</Index>";
+		}
+		$deleteXml.='</request>';
+		$xml = $this->http->postXml($this->getUrl('api/sms/set-read'), $deleteXml);
+		$obj = new \SimpleXMLElement($xml);
+		//Simple check if login is OK.
+		return ((string)$obj == 'OK');
+	}
 
 	/**
 	* Sends SMS to specified receiver. I don't know if it works for foreign numbers, 
