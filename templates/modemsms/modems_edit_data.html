@@ -3,21 +3,26 @@ $(function () {
    $.fn.selall = function() {
         if  (!$(this).is(":checked")){
              $(".checkbox").prop('checked', false);
-             $(".checkbox").parent().parent().css({backgroundColor: 'transparent'});
+//             $(".checkbox").parent().parent().css({backgroundColor: 'transparent'});
+		$(".checkbox").parent().parent().removeClass('red');
         }
         else{
              $(".checkbox").prop('checked', true);
-             $(".checkbox").parent().parent().css({backgroundColor: '#ff6666'});
+  //           $(".checkbox").parent().parent().css({backgroundColor: '#ff6666'});
+		$(".checkbox").parent().parent().addClass('red');
+
        }
 
    };
 
    $.fn.click = function() {
        if (!$(this).is(":checked")) {
-        $(this).parent().parent().css({backgroundColor: 'transparent'});
+	$(this).parent().parent().removeClass('red');
+
        }
        else {
-        $(this).parent().parent().css({backgroundColor: '#ff6666'});
+	$(this).parent().parent().addClass('red');
+
        }
    };
 });
@@ -25,9 +30,16 @@ $(function () {
 
 
 <style>
-   tbody tr:hover {
-    background: #eee; /* Цвет фона при наведении */
+   .hovered:hover {
+            background-color: #eee; /* Цвет фона при наведении */
    }
+   .red {
+        background-color: #ff6666 !important;
+   }
+   .red:hover {
+            background-color: red !important; /* Цвет фона при наведении */
+   }
+
    input[type='checkbox'] {
         width: 25px;
         height: 25px;
@@ -81,7 +93,7 @@ $(function () {
   <td><input type="checkbox" title="Пометить все на удаление" class="checkbox" id="selall" onClick="$(this).selall()"></td>
  </tr>
  [#begin PROPERTIES#]
- <tr>
+ <tr class="hovered">
   <td valign="top"><input type="text" name="title[#ID#]" id="title[#ID#]" value="[#TITLE#]" readonly></td>
   <td valign="top"><input type="text" name="note[#ID#]" id="note[#ID#]" value="[#NOTE#]"></td>
   <td valign="top"><input type="text" name="value[#ID#]" id="value[#ID#]" value="[#VALUE#]" readonly></td>
