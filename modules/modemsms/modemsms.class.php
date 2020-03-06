@@ -347,11 +347,12 @@ function usual(&$out) {
 	$router = new Router;
 	$router->setAddress($modem['IP']);
 	$status = $router->getStatus();
+	$signal = $router->getSignal();
 	$network = $router->getNetwork();
 	$smsCount = $router->getSmsCount();
 	$traff = $router->getTrafficStats();
 	$month = $router->getMonthStats();
-	$modemTotal=(object)array_merge((array)$status,(array)$network,(array)$smsCount,(array)$traff,(array)$month);
+	$modemTotal=(object)array_merge((array)$status,(array)$network,(array)$smsCount,(array)$traff,(array)$month,(array)$signal);
 //DebMes($modemTotal);
 	foreach ($modemTotal as $key => $value) {
 		$new=1;

@@ -48,7 +48,7 @@
   <td>Телефон</td>
   <td>Текст</td>
   <td>Дата</td>
-  <td>Удалить?</td>
+  <td><input type="checkbox" onClick="checkboxes = document.getElementsByName('delete_ids[]');for(var i=0, n=checkboxes.length;i<n;i++) {checkboxes[i].checked = this.checked;}"></td>
  </tr>
  [#begin PROPERTIES#]
  <tr>
@@ -56,7 +56,7 @@
   <td valign="top">[#Phone#]</td>
   <td valign="top" width="80%">[#Content#]</td>
   <td valign="top">[#Date#]</td>
-  <td><input type="checkbox" name="delete_ids[]" value=[#Index#]></td>
+  <td valign="top"><input type="checkbox" name="delete_ids[]" value=[#Index#]></td>
  </tr>
  [#end PROPERTIES#]
 </table> 

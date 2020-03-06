@@ -86,6 +86,10 @@ class Router
 	{
 		return $this->generalizedGet('api/monitoring/status');
 	}
+	public function getSignal()
+	{
+		return $this->generalizedGet('api/device/signal');
+	}
 
 	/**
 	* Gets traffic statistics (numbers are in bytes)
