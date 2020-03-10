@@ -26,6 +26,11 @@
    $rec['TYPE']=gr('type');
    $rec['SMSOPT']=gr('smsopt');
 
+
+   $rec['LINKED_OBJECT']=gr('linked_object');
+   $rec['LINKED_METHOD']=gr('linked_method');
+
+
   } else if ($this->tab=='sms') {
 	$delete_ids=gr('delete_ids');
   } else if ($this->tab=='data') {
@@ -67,6 +72,7 @@
 		$rec['SMSOPTS'][$key]['KEY'] = $key;
 		if ($key == $rec['SMSOPT']) $rec['SMSOPTS'][$key]['SELECTED'] = 'selected';
 	}
+
 
   }
   // step: data

@@ -174,7 +174,6 @@ function getModemParams (&$out, $id,$page) {
      }
 
     }
-
     $out['PROPERTIES'] = $properties;
     $out['PAGES'] = $pages;
     $out['PREVPAGE'] = $prevpage;
@@ -354,10 +353,14 @@ function usual(&$out) {
       $todb['IND']=$smss->Messages->Message[$i]->Index;
       $todb['PHONE']=$smss->Messages->Message[$i]->Phone;
       $todb['DEVICE_ID'] = $id;
-      $todb['CONTENT']=DBSafe($smss->Messages->Message[$i]->Content);
+      $todb['CONTENT']=$smss->Messages->Message[$i]->Content;
       $todb['DATE']=$smss->Messages->Message[$i]->Date;
       $indexes[]=$todb['IND'];
       SQLInsert('modems_sms',$todb);
+
+     if ($rec['LINKED_OBJECT'] && $rec['LINKED_METHOD']) {
+        callMethod($rec['LINKED_OBJECT'] . '.' . $rec['LINKED_METHOD'], array('PHONE'=>$todb['PHONE'],'TEXT' => $todb['CONTENT'], 'DATE' => $todb['DATE']));
+     }
      }
     }
     if (count($indexes)) {
@@ -387,7 +390,7 @@ function usual(&$out) {
      $todb['IND']=$sms['id'];
      $todb['PHONE']=$sms['number'];
      $todb['DEVICE_ID'] = $id;
-     $todb['CONTENT']=DBSafe($sms['content']);
+     $todb['CONTENT']=$sms['content'];
      preg_match_all('/\d+/',$sms['date'],$m);
      $m=$m[0];
      $unixtime=mktime($m[3],$m[4],$m[5],$m[1],$m[2],$m[0]);
@@ -563,6 +566,8 @@ modems_params -
  modems: CHECK_NEXT datetime DEFAULT NULL
  modems: INTERVAL int(10) unsigned DEFAULT NULL
  modems: SMSOPT int(10) unsigned DEFAULT NULL
+ modems: LINKED_OBJECT varchar(100) NOT NULL DEFAULT ''
+ modems: LINKED_METHOD varchar(100) NOT NULL DEFAULT ''
 
  modems_params: ID int(10) unsigned NOT NULL auto_increment
  modems_params: TITLE varchar(100) NOT NULL DEFAULT ''
