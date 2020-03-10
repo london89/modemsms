@@ -48,7 +48,6 @@ $(function () {
 [#if TOTALCOUNT#]
 Всего входящих смс: <#TOTALCOUNT#>.
 [#endif TOTALCOUNT#]
-Внимание, удаление происходит непосредственно с модема!
 <!-- Table 'modems' edit -->
 <!-- paging -->
 [#if PAGES#]
@@ -90,7 +89,7 @@ $(function () {
  </tr>
  [#begin PROPERTIES#]
  <tr class="hovered">
-  <td valign="top">[#if Smstat == 'message.png'#]<a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=sms&page=[#NUM#]&msg_id=[#Index#]&command=markasread" title="Пометить как прочитанное">[#endif#]<img src="/img/system/[#Smstat#]" width="34" height="34">[#if Smstat == 'message.png'#]</a>[#endif#]</td>
+  <td valign="top">[#if Smstat == 'message.png'#]<a href="?view_mode=<#VIEW_MODE#>&id=<#ID#>&tab=sms&page=<#NUM#>&msg_id=[#Index#]&command=markasread" title="Пометить как прочитанное">[#endif#]<img src="/img/system/[#Smstat#]" width="34" height="34">[#if Smstat == 'message.png'#]</a>[#endif#]</td>
   <td valign="top">[#Phone#]</td>
   <td valign="top" width="80%">[#Content#]</td>
   <td valign="top">[#Date#]</td>

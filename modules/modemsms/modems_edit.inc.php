@@ -3,6 +3,7 @@
 * @version 0.1 (wizard)
 */
 //DebMes($this->data_source);
+//DebMes(gr('smsopt'));
   if ($this->owner->name=='panel') {
    $out['CONTROLPANEL']=1;
   }
@@ -23,6 +24,7 @@
    $rec['IP']=gr('ip');
   //updating 'type' (varchar)
    $rec['TYPE']=gr('type');
+   $rec['SMSOPT']=gr('smsopt');
 
   } else if ($this->tab=='sms') {
 	$delete_ids=gr('delete_ids');
@@ -59,10 +61,18 @@
 		if ($modems[$i] == $rec['TYPE']) $rec['MODEMS'][$i]['SELECTED'] = 'selected';
 
 	}
+	$smsopt=array(0 => 'Помечать как прочитанные', 1 => 'Удалять с модема', 2 => 'Ничего не делать');
+	foreach ($smsopt as $key => $opt) {
+		$rec['SMSOPTS'][$key]['NAME'] = $opt;
+		$rec['SMSOPTS'][$key]['KEY'] = $key;
+		if ($key == $rec['SMSOPT']) $rec['SMSOPTS'][$key]['SELECTED'] = 'selected';
+	}
+
   }
   // step: data
 //  if ($this->tab=='data') {
 //  }
+/*
   if ($this->tab=='sms') {
    if ($rec['TYPE'] == 'huawei') {
     include_once '3rdparty/Router.php';
@@ -112,25 +122,6 @@
 //		DebMes($delete_ids);
         }
 
-/*	$page=1;
-        if (isset($_GET['page']) && is_numeric($_GET['page'])) $page=$_GET['page'];
-        $totalCount=SQLSelectOne("SELECT sum(VALUE) as VALUE FROM modems_params WHERE DEVICE_ID='".$rec['ID']."' AND (TITLE='sms_nv_rev_total' OR TITLE='sms_nv_send_total')");
-*/
-//DebMes($totalCount);
-/*
-       if (isset($totalCount['VALUE']) && is_numeric($totalCount['VALUE'])) {
-        $out['TOTALCOUNT']=$totalCount['VALUE'];
-        $all_sms = $zte->get_sms($page);
-        $pagesCount=(int)($totalCount['VALUE']/20);
-        for ($i=0;$i<=$pagesCount;$i++) {
-           $pages[$i]['NUM'] = $i+1;
-           if ($i+1 == $page) $pages[$i]['SELECTED']='1';
-        }
-       } else {
-        $all_sms = $zte->get_sms();
-
-       }
-*/
 	$all_sms = $zte->get_sms();
 	$i=0;
 	foreach ($all_sms as $sms) {
@@ -152,6 +143,53 @@
    $out['NEXTPAGE']=$nextpage;
 
   }
+*/
+  if ($this->tab=='sms') {
+    if (isset($delete_ids) && is_array($delete_ids)) {
+        $ids_list=implode(",",$delete_ids);
+        SQLExec("DELETE FROM modems_sms WHERE ID IN (".DbSafe($ids_list).")");
+        $page=1;
+        if (isset($_GET['page']) && is_numeric($_GET['page'])) $page=$_GET['page'];
+        $this->redirect('?tab=data&view_mode=edit_modems&tab=sms&id='.$rec['ID'].'&page='.$page);
+
+//      DebMes($ids_list);
+    }
+
+    $page=1;
+    if (isset($_GET['page']) && is_numeric($_GET['page'])) $page=$_GET['page'];
+    $totalCount=SQLSelectOne("SELECT count(*) as count FROM modems_sms WHERE DEVICE_ID='".$rec['ID']."'");
+
+    if (isset($totalCount['count']) && is_numeric($totalCount['count'])) {
+     $out['TOTALCOUNT']=$totalCount['count'];
+     $smss=SQLSelect("SELECT * FROM modems_sms WHERE DEVICE_ID='".$rec['ID']."' ORDER BY date DESC LIMIT ".(($page-1)*20).",20");
+     $pagesCount=(int)($totalCount['count']/20);
+     $prevpage=$nextpage=array();
+     for ($i=0;$i<=$pagesCount;$i++) {
+        $pages[$i]['NUM'] = $i+1;
+        if ($i == $page-1) {
+         if ($i>0) $prevpage['NUM']=$i;
+         if ($i<$pagesCount) $nextpage['NUM']=$i+2;
+         $pages[$i]['SELECTED']='1';
+        }
+     }
+    }
+
+   $i=0;
+   foreach ($smss as $sms) {
+    $properties[$i]['Smstat']=str_replace(array(0,1),array('message.png','accept.png'),$sms['SMSTAT']);
+    $properties[$i]['Index']=$sms['ID'];
+    $properties[$i]['Phone']=$sms['PHONE'];
+    $properties[$i]['Content']=$sms['CONTENT'];
+    $properties[$i]['Date']=$sms['DATE'];
+    $i++;
+   }
+   $out['PROPERTIES']=$properties;
+   $out['PAGES']=$pages;
+   $out['NUM']=$page;
+   $out['PREVPAGE']=$prevpage;
+   $out['NEXTPAGE']=$nextpage;
+//	DebMes($smss);
+  }
   if ($this->command=='refresh') {
 //	DebMes('Refresh');
 	$this->checkModem();
@@ -159,7 +197,10 @@
 
   }
   if ($this->command=='markasread') {
-   if ($rec['TYPE'] == 'huawei') {
+//	DebMes($_GET);
+   SQLExec("UPDATE modems_sms set SMSTAT = 1 where DEVICE_ID=".$rec['ID']." AND ID=".DbSafe($_GET['msg_id']));
+//   SQLUpdate();
+/*   if ($rec['TYPE'] == 'huawei') {
     include_once '3rdparty/Router.php';
     $router = new Router;
     $router->setAddress($rec['IP']);
@@ -173,8 +214,9 @@
 
 
    }
+*/
 //	DebMes('markasread');
-        $this->redirect('?tab=sms&view_mode=edit_modems&id='.$rec['ID'].'&page='.$page);
+        $this->redirect('?tab=sms&view_mode=edit_modems&id='.$rec['ID'].'&page='.$_GET['page']);
 
   }
   if ($this->command=='fullrefresh') {

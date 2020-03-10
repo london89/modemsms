@@ -128,17 +128,21 @@ class ZTE_WEB
         }
         public function delete_sms($id)
         {
+		if (!is_array($id)) return 'err not array';
 		if (!isset($id)) return false;
+		$ids = implode(';',$id);
                 $url = 'http://'.$this->ip.'/goform/goform_set_cmd_process';
-                $post='isTest=false&goformId=DELETE_SMS&msg_id='.$id.';&Callback=true';
+                $post='isTest=false&goformId=DELETE_SMS&msg_id='.$ids.';&Callback=true';
                 return $this->url($url,$post);
         }
 
         public function mark_as_read($id)
         {
+		if (!is_array($id)) return 'err not array';
                 $url = 'http://'.$this->ip.'/goform/goform_set_cmd_process';
-         	$id = $id.';';
-                $post='isTest=false&goformId=SET_MSG_READ&msg_id='.urlencode($id).'&tag=0';
+		$ids = implode(';',$id).';';
+//         	$id = $id.';';
+                $post='isTest=false&goformId=SET_MSG_READ&msg_id='.urlencode($ids).'&tag=0';
                 return $this->url($url,$post);
         }
 

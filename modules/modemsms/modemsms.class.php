@@ -123,6 +123,7 @@ function run() {
 //DebMes($out);
 }
 function getModemParams (&$out, $id,$page) {
+
    $count=SQLSelectOne("SELECT count(*) as count FROM modems_params WHERE DEVICE_ID='".$id."'");
    $count=$count['count'];
    $pagesCount=(int)($count/10);
@@ -136,12 +137,16 @@ function getModemParams (&$out, $id,$page) {
      }
    }
 
+
    $properties=SQLSelect("SELECT * FROM modems_params WHERE DEVICE_ID='".$id."' ORDER BY UPDATED DESC LIMIT ".(($page-1)*10).",10");
+
    $total=count($properties);
    if (!$total)    $this->checkModem(1);
+
 //DebMes($this->mode);
    for($i=0;$i<$total;$i++) {
-    if ($properties[$i]['ID']==$new_id) continue;
+//    if ($properties[$i]['ID']==$new_id) continue;
+//DebMes(${'title'.$properties[$i]['ID']});
     if ($this->mode=='update') {
       global ${'title'.$properties[$i]['ID']};
       $properties[$i]['TITLE']=trim(${'title'.$properties[$i]['ID']});
@@ -165,9 +170,11 @@ function getModemParams (&$out, $id,$page) {
       if ($properties[$i]['LINKED_OBJECT'] && $properties[$i]['LINKED_PROPERTY']) {
        addLinkedProperty($properties[$i]['LINKED_OBJECT'], $properties[$i]['LINKED_PROPERTY'], $this->name);
       }
+
      }
 
     }
+
     $out['PROPERTIES'] = $properties;
     $out['PAGES'] = $pages;
     $out['PREVPAGE'] = $prevpage;
@@ -234,6 +241,7 @@ function admin(&$out) {
    if ($this->tab == 'data') {
 	$page=1;
 	if (isset($_GET['page']) && is_numeric($_GET['page'])) $page=$_GET['page'];
+//DebMes('data');
 	$this->getModemParams($out, $this->id,$page);
    }
    $this->edit_modems($out, $this->id);
@@ -328,11 +336,91 @@ function usual(&$out) {
 	$this->checkModem();
   //to-do
  }
- function getSms() {
-//        include_once '3rdparty/Router.php';
-//        $router = new Router;
-//        $router->setAddress($modem['URL']);
+ function getSms($id,$smscount,$perpage=20) {
+  $rec=SQLSelectOne("SELECT * FROM modems WHERE ID='$id'");
+  if ($rec['TYPE'] == 'huawei') {
+   include_once '3rdparty/Router.php';
+   $router = new Router;
+   $router->setAddress($rec['IP']);
+   for ($a=0;$a*$perpage<=$smscount;$a++) {
+    $smss = $router->getInbox($a+1,$perpage);
+    $total=$smss->Count;
+//   DebMes($total);
+    $indexes=array();
+    for ($i=0;$i<$total;$i++) {
+//DebMes($smss);
+     if ($smss->Messages->Message[$i]->Smstat == 0) {
+      $todb['SMSTAT']=0;
+      $todb['IND']=$smss->Messages->Message[$i]->Index;
+      $todb['PHONE']=$smss->Messages->Message[$i]->Phone;
+      $todb['DEVICE_ID'] = $id;
+      $todb['CONTENT']=DBSafe($smss->Messages->Message[$i]->Content);
+      $todb['DATE']=$smss->Messages->Message[$i]->Date;
+      $indexes[]=$todb['IND'];
+      SQLInsert('modems_sms',$todb);
+     }
+    }
+    if (count($indexes)) {
 
+     // помечаем полученные сообщения как прочитанные
+     if ($rec['SMSOPT'] == 0) {
+      $router->mark_as_read($indexes);
+     // или, удаляем полученные сообщения
+     } else if ($rec['SMSOPT'] == 1) {
+      $router->deleteSms($indexes);
+     }
+    // DebMes($indexes);
+    }
+   }
+  } else if ($rec['TYPE'] == 'zte') {
+   include_once '3rdparty/Zte.php';
+   $zte = new ZTE_WEB;
+   $zte->setAddress($rec['IP']);
+   $all_sms = $zte->get_sms();
+   $i=0;
+   $indexes=array();
+   foreach ($all_sms as $sms) {
+//DebMes($sms['tag']);
+    if ($sms['tag'] == 1) {
+//    if (true) {
+     $todb['SMSTAT']=0;
+     $todb['IND']=$sms['id'];
+     $todb['PHONE']=$sms['number'];
+     $todb['DEVICE_ID'] = $id;
+     $todb['CONTENT']=DBSafe($sms['content']);
+     preg_match_all('/\d+/',$sms['date'],$m);
+     $m=$m[0];
+     $unixtime=mktime($m[3],$m[4],$m[5],$m[1],$m[2],$m[0]);
+     $norm_date=date('Y-m-d H:i:s',$unixtime);
+     $todb['DATE']=$norm_date;
+     $indexes[]=$todb['IND'];
+     SQLInsert('modems_sms',$todb);
+    }
+
+/*
+    $properties[$i]['Smstat']=str_replace(array(0,1,2),array('accept.png','message.png','warning.png'),$sms['tag']);
+    $properties[$i]['Index']=$sms['id'];
+    $properties[$i]['Phone']=$sms['number'];
+    $properties[$i]['Content']=$sms['content'];
+    preg_match_all('/\d+/',$sms['date'],$m);
+    $m=$m[0];
+    $unixtime=mktime($m[3],$m[4],$m[5],$m[1],$m[2],$m[0]);
+    $norm_date=date('Y-m-d H:i:s',$unixtime);
+    $properties[$i]['Date']=$norm_date;
+    $i++;
+*/
+   }
+   if (count($indexes)) {
+    // помечаем полученные сообщения как прочитанные
+    if ($rec['SMSOPT'] == 0) {
+     $zte->mark_as_read($indexes);
+    // или, удаляем полученные сообщения
+    } else if ($rec['SMSOPT'] == 1) {
+     $zte->delete_sms($indexes);
+    }
+   // DebMes($indexes);
+   }
+  }
  }
  function checkModem($full=0) {
 //  $modemlist=SQLSelect("SELECT * FROM modemsms_devices WHERE CHECK_NEXT<=NOW()");
@@ -341,6 +429,7 @@ function usual(&$out) {
   for($i=0;$i<$total;$i++) {
    $modem=$modemlist[$i];
    $prec=SQLSelect("SELECT * FROM modems_params WHERE DEVICE_ID=".$modem['ID']);
+//   $sms=SQLSelect("SELECT * FROM modems_sms WHERE DEVICE_ID=".$modem['ID']);
 //	DebMes($modem);
    if ($modem['TYPE'] == 'huawei') {
 	include_once '3rdparty/Router.php';
@@ -385,6 +474,10 @@ function usual(&$out) {
                         SQLInsert('modems_params', $rec_par);
 		}
 	}
+        $this->getSms($modem['ID'],$modemTotal->LocalInbox,20);
+
+//	$smsFromModem = $router->getInbox(0,500);
+//	foreach ()
 
 
    } else if ($modem['TYPE'] == 'zte') {
@@ -420,10 +513,12 @@ function usual(&$out) {
                         SQLInsert('modems_params', $rec_par);
                 }
         }
-
+//DebMes($modemTotal->sms_nv_rev_total);
+        $this->getSms($modem['ID'],$modemTotal->sms_nv_rev_total,20);
 
    }
   }
+
  }
 /**
 * Install
@@ -467,6 +562,7 @@ modems_params -
  modems: CHECK_LATEST datetime DEFAULT NULL
  modems: CHECK_NEXT datetime DEFAULT NULL
  modems: INTERVAL int(10) unsigned DEFAULT NULL
+ modems: SMSOPT int(10) unsigned DEFAULT NULL
 
  modems_params: ID int(10) unsigned NOT NULL auto_increment
  modems_params: TITLE varchar(100) NOT NULL DEFAULT ''
