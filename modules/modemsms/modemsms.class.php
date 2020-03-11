@@ -204,6 +204,7 @@ function sendSMS($title,$phone,$text) {
     $zte->setAddress($rec['IP']);
 //    $send = '{"result":"success"}';
 //{"result":"success"} если всё ок
+//DebMes($phone.' '.$text);
     $send = $zte->send($phone,$text);
     $send = json_decode($send);
     if ($send->result == 'success') {

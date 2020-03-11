@@ -10,8 +10,9 @@
    $table_name='modems';
    $rec=SQLSelectOne("SELECT * FROM $table_name WHERE ID='$id'");
    if (isset($rec['TITLE'])) {
-//   $send = $this->sendSMS($title,$phone,$text);
-     $send=1;
+   $send=1;
+
+   $send = $this->sendSMS($rec['TITLE'],$phone,$text);
 //     DebMes($rec['TITLE'].$phone.$text);
      if ($send) {
       $out['OK'] = 1;
