@@ -31,9 +31,7 @@
 <pre>
 Отправка из методов и скриптов с этого модема:
 
-include_once(DIR_MODULES . 'modemsms/modemsms.class.php');
-$sms = new modemsms();
-$sms->sendSMS("<#TITLE#>", "phone", "test message");
+callAPI('/api/module/modemsms','GET',array('modemname'=>'<#TITLE#>','phone'=>'89991234567', 'text'=> 'test'));
 </pre>
 </div>
 

@@ -58,6 +58,13 @@ function saveParams($data=1) {
 *
 * @access public
 */
+
+function api($params) {
+  if ($params['modemname'] && $params['phone'] && $params['text']) {
+    $sms = new modemsms();
+    $sms->sendSMS($params['modemname'], $params['phone'], $params['text']);
+  }
+}
 function getParams() {
   global $id;
   global $mode;
