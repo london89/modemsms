@@ -4,7 +4,6 @@
 <a href="?data_source=<#DATA_SOURCE#>&view_mode=edit_modems&id=[#ID#]" class="btn btn-default" title="Add"><i class="glyphicon glyphicon-plus"></i> Добавить</a>
 
 </p>
-
 <table width=100% border=0><tr>
 <td valign=top>
 <!-- results -->
@@ -41,6 +40,14 @@
    [#IP#]
   [#else#]
    &nbsp;
+  [#endif#]
+ </td>
+ <td
+   >
+  [#if ONLINE==1#]
+   <font color="green">Online</font>
+  [#else#]
+   <font color="red">Offline</font>
   [#endif#]
  </td>
  <td

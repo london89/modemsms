@@ -441,7 +441,19 @@ function usual(&$out) {
    $modem=$modemlist[$i];
    $prec=SQLSelect("SELECT * FROM modems_params WHERE DEVICE_ID=".$modem['ID']);
 //   $sms=SQLSelect("SELECT * FROM modems_sms WHERE DEVICE_ID=".$modem['ID']);
-//	DebMes($modem);
+   $pos = strpos($modem['IP'],':');
+   if ($pos === FALSE) {
+	$ip = $modem['IP'];
+   } else {
+	$ip = substr($modem['IP'],0,$pos);
+   }
+   if (!ping($ip)) {
+	if ($modem['ONLINE']) SQLExec("UPDATE modems set ONLINE = 0 where ID=".$modem['ID']);
+	continue;
+
+   } else {
+	if (!$modem['ONLINE']) SQLExec("UPDATE modems set ONLINE = 1 where ID=".$modem['ID']);
+   }
    if ($modem['TYPE'] == 'huawei') {
 	include_once '3rdparty/Router.php';
 	$router = new Router;
@@ -551,6 +563,7 @@ function usual(&$out) {
  function uninstall() {
   SQLExec('DROP TABLE IF EXISTS modems');
   SQLExec('DROP TABLE IF EXISTS modems_params');
+  SQLExec('DROP TABLE IF EXISTS modems_sms');
   parent::uninstall();
  }
 /**
@@ -570,6 +583,7 @@ modems_params -
  modems: TITLE varchar(100) NOT NULL DEFAULT ''
  modems: TYPE varchar(255) NOT NULL DEFAULT ''
  modems: IP varchar(255) NOT NULL DEFAULT ''
+ modems: ONLINE TINYINT(1) NOT NULL DEFAULT '0'
  modems: CHECK_LATEST datetime DEFAULT NULL
  modems: CHECK_NEXT datetime DEFAULT NULL
  modems: INTERVAL int(10) unsigned DEFAULT NULL
