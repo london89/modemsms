@@ -20,8 +20,9 @@ echo date("H:i:s") . " running " . basename(__FILE__) . PHP_EOL;
 $checkEvery=5*60; // poll every 5 minutes
 while (1)
 {
-   setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);
+   
    if ((time()-$latest_check)>$checkEvery) {
+    setGlobal((str_replace('.php', '', basename(__FILE__))) . 'Run', time(), 1);
     $latest_check=time();
     echo date('Y-m-d H:i:s').' Polling devices...';
     $modemsms_module->processCycle();
