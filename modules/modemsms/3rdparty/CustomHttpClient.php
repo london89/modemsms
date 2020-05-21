@@ -11,8 +11,8 @@
 */
 class CustomHttpClient
 {
-	private $connectionTimeout = 3;
-	private $responseTimeout = 5;
+	private $connectionTimeout = 2;
+	private $responseTimeout = 4;
 
 	//The API gives us cookie data in an API request, so manual cookies.
 	private $manualCookieData = '';

@@ -197,7 +197,14 @@ function sendSMS($title,$phone,$text) {
     $router->setAddress($rec['IP']);
 //    $send = 1;
 // 1 - если все ок
-    $send = $router->sendSms($phone,$text);
+    try{
+        $send = $router->sendSms($phone,$text);
+    }
+    catch(Exception $e){
+	DebMes($e.' не отправлено');
+        return 0;;
+    }
+
     if ($send == 1) {
 	return 1;
     } else {
@@ -350,7 +357,13 @@ function usual(&$out) {
    $router = new Router;
    $router->setAddress($rec['IP']);
    for ($a=0;$a*$perpage<=$smscount;$a++) {
-    $smss = $router->getInbox($a+1,$perpage);
+    try{
+        $smss = $router->getInbox($a+1,$perpage);
+    }
+    catch(Exception $e){
+        return 'error';
+    }
+
     $total=$smss->Count;
 //   DebMes($total);
     $indexes=array();
@@ -374,12 +387,18 @@ function usual(&$out) {
     if (count($indexes)) {
 
      // помечаем полученные сообщения как прочитанные
+    try{
      if ($rec['SMSOPT'] == 0) {
       $router->mark_as_read($indexes);
      // или, удаляем полученные сообщения
      } else if ($rec['SMSOPT'] == 1) {
       $router->deleteSms($indexes);
      }
+    }
+    catch(Exception $e){
+        return 'error';
+    }
+
     // DebMes($indexes);
     }
    }
@@ -458,12 +477,17 @@ function usual(&$out) {
 	include_once '3rdparty/Router.php';
 	$router = new Router;
 	$router->setAddress($modem['IP']);
-	$status = $router->getStatus();
-	$signal = $router->getSignal();
-	$network = $router->getNetwork();
-	$smsCount = $router->getSmsCount();
-	$traff = $router->getTrafficStats();
-	$month = $router->getMonthStats();
+	try{
+        	$status = $router->getStatus();
+		$signal = $router->getSignal();
+		$network = $router->getNetwork();
+		$smsCount = $router->getSmsCount();
+		$traff = $router->getTrafficStats();
+		$month = $router->getMonthStats();
+	}
+	catch(Exception $e){
+	        return 'error';
+	}
 	$modemTotal=(object)array_merge((array)$status,(array)$network,(array)$smsCount,(array)$traff,(array)$month,(array)$signal);
 //DebMes($modemTotal);
 	foreach ($modemTotal as $key => $value) {

@@ -25,7 +25,7 @@ class ZTE_WEB
                         curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
                         curl_setopt($ch,CURLOPT_BINARYTRANSFER,false);
                         curl_setopt($ch,CURLOPT_HEADER,false);
-                        curl_setopt($ch,CURLOPT_TIMEOUT, 90);
+                        curl_setopt($ch,CURLOPT_TIMEOUT, 10);
                         curl_setopt($ch, CURLOPT_REFERER, 'http://'.$this->ip.'/index.html');
                         $header = array();
                         $header[] = 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
