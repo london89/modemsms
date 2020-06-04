@@ -380,7 +380,7 @@ function usual(&$out) {
       SQLInsert('modems_sms',$todb);
 
      if ($rec['LINKED_OBJECT'] && $rec['LINKED_METHOD']) {
-        callMethod($rec['LINKED_OBJECT'] . '.' . $rec['LINKED_METHOD'], array('PHONE'=>$todb['PHONE'],'TEXT' => $todb['CONTENT'], 'DATE' => $todb['DATE']));
+        callMethod($rec['LINKED_OBJECT'] . '.' . $rec['LINKED_METHOD'], array('PHONE'=>$todb['PHONE'],'TEXT' => $todb['CONTENT'], 'DATE' => $todb['DATE'], 'MODEM_NAME' => $rec['TITLE']));
      }
      }
     }
@@ -426,7 +426,7 @@ function usual(&$out) {
      $indexes[]=$todb['IND'];
      SQLInsert('modems_sms',$todb);
      if ($rec['LINKED_OBJECT'] && $rec['LINKED_METHOD']) {
-        callMethod($rec['LINKED_OBJECT'] . '.' . $rec['LINKED_METHOD'], array('PHONE'=>$todb['PHONE'],'TEXT' => $todb['CONTENT'], 'DATE' => $todb['DATE']));
+        callMethod($rec['LINKED_OBJECT'] . '.' . $rec['LINKED_METHOD'], array('PHONE'=>$todb['PHONE'],'TEXT' => $todb['CONTENT'], 'DATE' => $todb['DATE'], 'MODEM_NAME' => $rec['TITLE']));
      }
 
     }
