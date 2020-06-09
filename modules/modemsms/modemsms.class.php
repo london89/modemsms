@@ -195,6 +195,10 @@ function sendSMS($title,$phone,$text) {
     include_once '3rdparty/Router.php';
     $router = new Router;
     $router->setAddress($rec['IP']);
+    if ($rec['AUTH']) {
+        $router->setNeedsAuth(true);
+        $router->login($rec['LOGIN'],$rec['PASSWORD']);
+    }
 //    $send = 1;
 // 1 - если все ок
     try{
@@ -356,6 +360,10 @@ function usual(&$out) {
    include_once '3rdparty/Router.php';
    $router = new Router;
    $router->setAddress($rec['IP']);
+   if ($rec['AUTH']) {
+       $router->setNeedsAuth(true);
+       $router->login($rec['LOGIN'],$rec['PASSWORD']);
+   }
    for ($a=0;$a*$perpage<=$smscount;$a++) {
     try{
         $smss = $router->getInbox($a+1,$perpage);
@@ -482,6 +490,10 @@ function usual(&$out) {
 	include_once '3rdparty/Router.php';
 	$router = new Router;
 	$router->setAddress($modem['IP']);
+        if ($rec['AUTH']) {
+            $router->setNeedsAuth(true);
+            $router->login($rec['LOGIN'],$rec['PASSWORD']);
+        }
 	try{
         	$status = $router->getStatus();
 		$signal = $router->getSignal();
