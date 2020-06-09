@@ -359,6 +359,7 @@ function usual(&$out) {
    for ($a=0;$a*$perpage<=$smscount;$a++) {
     try{
         $smss = $router->getInbox($a+1,$perpage);
+	DebMes($smss);
     }
     catch(Exception $e){
         return 'error';
@@ -616,6 +617,9 @@ modems_params -
  modems: CHECK_NEXT datetime DEFAULT NULL
  modems: INTERVAL int(10) unsigned DEFAULT NULL
  modems: SMSOPT int(10) unsigned DEFAULT NULL
+ modems: AUTH int(10) unsigned DEFAULT NULL
+ modems: LOGIN varchar(255) DEFAULT NULL
+ modems: PASSWORD varchar(255) DEFAULT NULL
  modems: LINKED_OBJECT varchar(100) NOT NULL DEFAULT ''
  modems: LINKED_METHOD varchar(100) NOT NULL DEFAULT ''
 
