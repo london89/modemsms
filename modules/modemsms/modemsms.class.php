@@ -367,7 +367,7 @@ function usual(&$out) {
    for ($a=0;$a*$perpage<=$smscount;$a++) {
     try{
         $smss = $router->getInbox($a+1,$perpage);
-	DebMes($smss);
+	//DebMes($smss);
     }
     catch(Exception $e){
         return 'error';

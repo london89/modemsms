@@ -67,7 +67,7 @@ $(function () {
 
 <form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
 [#if OK#]
-<div class="alert alert-success"><#LANG_DATA_SAVED#>11</div>
+<div class="alert alert-success"><#LANG_DATA_SAVED#></div>
 [#endif OK#]
 [#if ERR#]
 <div class="alert alert-danger"><#LANG_FILLOUT_REQURED#></div>
@@ -103,7 +103,7 @@ $(function () {
 <div class="form-group">
         <div class="col-lg-offset-3 col-lg-4">
  [#if ID!=""#]
- <button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_SUBMIT#></button>
+ <button type="submit" name="subm" value="Submit" class="btn btn-primary"><#LANG_DELETE#></button>
  [#else ID#]
  <button type="submit" name="subm" value="Add" class="btn btn-primary"><#LANG_ADD#></button>
  [#endif ID#]
