@@ -26,6 +26,10 @@
    $rec['TYPE']=gr('type');
    $rec['SMSOPT']=gr('smsopt');
 
+   $rec['AUTH']=gr('auth');
+   $rec['LOGIN']=gr('login');
+   $rec['PASSWORD']=gr('password');
+
 
    $rec['LINKED_OBJECT']=gr('linked_object');
    $rec['LINKED_METHOD']=gr('linked_method');

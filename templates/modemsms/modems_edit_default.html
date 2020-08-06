@@ -1,3 +1,20 @@
+<script>
+$(document).ready(function(){
+ if ($("input#auth").prop("checked")) {
+  $('#logopass').fadeIn().show();
+ }
+ $("input#auth").change(function(){
+
+  if ($(this).prop("checked")) {
+      $('#logopass').fadeIn().show();
+      return;
+  } else {
+      $('#logopass').fadeOut(300); 
+  }
+
+ });
+})
+</script>
 <!-- Table 'modems' edit -->
 <form action="?" method="post" enctype="multipart/form-data" name="frmEdit" class="form-horizontal">
 [#if OK#]
@@ -38,6 +55,22 @@
 </div>
 
 <div class="form-group[#if ERR_TYPE#] has-error[#endif#]">
+
+[#if TYPE="huawei"#]
+ <label for="type" class="col-lg-3 control-label">
+ Авторизация:
+ </label>
+ <div class="col-lg-9"><input id="auth" name="auth" value="1" type="checkbox" class="form-control" style="width:30px;"[#if AUTH="1"#] checked[#endif AUTH#]>
+<div id="logopass" style="display:none;">
+<label>Логин: </label><input id="login" name="login" value="[#LOGIN#]" type="text" class="form-control">
+<label>Пароль: </label><input id="password" name="password" value="[#PASSWORD#]" type="password" class="form-control">
+</div>
+</div>
+</div>
+
+<div class="form-group[#if ERR_TYPE#] has-error[#endif#]">
+[#endif TYPE#]
+
  <label for="type" class="col-lg-3 control-label">
  Смс на модеме:
  </label>
