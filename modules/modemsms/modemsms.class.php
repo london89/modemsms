@@ -492,7 +492,7 @@ function usual(&$out) {
 	$router->setAddress($modem['IP']);
         if ($rec['AUTH']) {
             $router->setNeedsAuth(true);
-            $router->login($rec['LOGIN'],$rec['PASSWORD']);
+            $router->login($modem['LOGIN'],$modem['PASSWORD']);
         }
 	try{
         	$status = $router->getStatus();
