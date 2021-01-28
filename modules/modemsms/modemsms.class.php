@@ -490,7 +490,7 @@ function usual(&$out) {
 	include_once '3rdparty/Router.php';
 	$router = new Router;
 	$router->setAddress($modem['IP']);
-        if ($rec['AUTH']) {
+        if ($modem['AUTH']) {
             $router->setNeedsAuth(true);
             $router->login($modem['LOGIN'],$modem['PASSWORD']);
         }
