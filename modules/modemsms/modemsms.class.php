@@ -467,6 +467,16 @@ function usual(&$out) {
  }
  function checkModem($full=0) {
 //  $modemlist=SQLSelect("SELECT * FROM modemsms_devices WHERE CHECK_NEXT<=NOW()");
+  if(method_exists($this, 'sendnotification')) {
+      $last_message=SQLSelectOne("SELECT ADDED FROM `module_notifications` where MODULE_NAME='modemsms' and TYPE='danger' order by ADDED DESC LIMIT 1;");
+      if (isset($last_message['ADDED'])) $last_timestamp=strtotime($last_message['ADDED']);
+      else $last_timestamp=0;
+      if ((time()-$last_timestamp > 1*30*24*60*60) || !$last_timestamp) { // если с последнего оповещения прошло больше месяца
+        $sms_count=SQLSelectOne("SELECT count(*) as count FROM `modems_sms`");
+        if ($sms_count['count'] > 2000) $this->sendnotification('В Вашей базе хранится уже '.$sms_count['count'].' смс сообщений. Уверены, что это нормально?:) Не ставьте галочку "ничего не делать" в настройках смс модема, если не понимаете о чем речь. Либо отмечайте как прочитанное, либо удаляйте их с модема.', 'd>
+      }
+  }
+
   $modemlist=SQLSelect("SELECT * FROM modems");
   $total=count($modemlist);
   for($i=0;$i<$total;$i++) {
